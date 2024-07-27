@@ -32,7 +32,7 @@ function LoginPage() {
           >
             Password:
             <input
-              type="text"
+              type="password"
               placeholder="********"
               className="w-4/6 pl-2 border-2  border-sky-600 rounded-lg py-1"
             />
