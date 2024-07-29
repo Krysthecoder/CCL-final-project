@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import img from '../assets/login-doctor-image.jpg';
+import Botton from '../components/Btn';
 
 function LoginPage() {
   return (
@@ -19,7 +19,7 @@ function LoginPage() {
             htmlFor=""
             className="flex gap-4 text-base justify-between mt-2 h-10 items-center"
           >
-            User Name:
+            Email:
             <input
               type="text"
               placeholder="Juanito Pancracio"
@@ -38,22 +38,8 @@ function LoginPage() {
             />
           </label>
           <div className="flex justify-evenly mt-6 py-5 gap-6">
-            <button
-              class="flex select-none items-center rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-              data-ripple-light="true"
-            >
-              Log-in
-            </button>
-            <Link to="./Calendar">
-              <button
-                class="flex select-none items-center rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button"
-                data-ripple-light="true"
-              >
-                Sign-up
-              </button>
-            </Link>
+            <Botton title="Sign-up" address="./SignUp" />
+            <Botton title="Login" address="./CalendarPage" />
           </div>
         </form>
       </div>
