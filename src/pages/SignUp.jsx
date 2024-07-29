@@ -7,7 +7,6 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [hiddenAlert, setHiddenAlert] = useState('hidden');
 
   useEffect(() => {
     console.log(password);
@@ -72,10 +71,6 @@ export default function SignUp() {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </label>
-
-        <div className={hiddenAlert}>
-          <p>passwords does not match</p>
-        </div>
 
         <div className="flex justify-evenly mt-6 py-5 gap-10">
           <Botton title="Go back Home" address="../" />
