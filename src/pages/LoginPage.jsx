@@ -39,7 +39,7 @@ function LoginPage() {
           </label>
           <div className="flex justify-evenly mt-6 py-5 gap-6">
             <Botton title="Sign-up" address="./SignUp" />
-            <Botton title="Login" address="./CalendarPage" />
+            <Botton title="Login" address="./CurrentSchedule" />
           </div>
         </form>
       </div>
