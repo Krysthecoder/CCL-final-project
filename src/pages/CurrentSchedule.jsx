@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { LogoutIcon, CalendarIcon } from '../icons';
 
 function CurrentSchedule() {
   const [value, onChange] = useState(new Date());
@@ -18,8 +19,8 @@ function CurrentSchedule() {
         </div>
         <ul>
           <li>
-            <Link to="/" className="text-2xl text-stone-300 font-semibold">
-              Log-out
+            <Link to="/" className=" text-stone-300">
+              <LogoutIcon title="Logout" />
             </Link>
           </li>
         </ul>
@@ -46,10 +47,11 @@ function CurrentSchedule() {
         <div className="col-start-5 col-span-3 row-start-1 row-span-2">
           <Link to="../ScheduleNewAppointment">
             <button
-              class="items-center bg-gradient-to-tr w-full mt-3 mb-4 from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              class="flex justify-center items-center gap-2 bg-gradient-to-tr w-full mt-3 mb-4 from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
             >
-              Schedule new appointment
+              <span>Schedule new appointment</span>
+              <span>{<CalendarIcon />}</span>
             </button>
           </Link>
           <Calendar onChange={onChange} value={value} />
