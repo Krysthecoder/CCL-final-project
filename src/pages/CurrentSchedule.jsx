@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import { LogoutIcon, CalendarIcon } from '../icons';
+import { CalendarIcon } from '../icons';
 import NavBar from '../components/NavBar/index';
 
 function CurrentSchedule() {
