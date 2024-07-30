@@ -36,7 +36,7 @@ function ScheduleNewAppointment() {
               <input
                 type="text"
                 placeholder="Juanito"
-                className="w-4/6 pl-2 border-2  border-sky-600 rounded-lg py-1"
+                className="w-7/12 pl-2 border-2  border-sky-600 rounded-lg py-1"
               />
             </label>
 
@@ -47,7 +47,7 @@ function ScheduleNewAppointment() {
               Choose the time:
               <select
                 input="menu"
-                className="w-4/6 pl-2 border-2  border-sky-600 rounded-lg py-1"
+                className="w-7/12 pl-2 border-2  border-sky-600 rounded-lg py-1"
                 value={timeSelected}
                 onChange={(e) => setTimeSelected(e.target.value)}
               >
@@ -62,12 +62,12 @@ function ScheduleNewAppointment() {
               <textarea
                 type="text"
                 placeholder="Juanito"
-                className="w-4/6 pl-2 border-2 text-sm h-20 border-sky-600 rounded-lg py-1"
+                className="w-7/12 pl-2 border-2 text-sm h-20 border-sky-600 rounded-lg py-1"
               />
             </label>
 
             <button
-              class="flex justify-center items-center gap-2 bg-gradient-to-tr mx-auto mt-4 rounded-lg from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              class="flex justify-center items-center gap-2 bg-gradient-to-tr mx-auto mt-6 rounded-lg from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
             >
               <span>Schedule</span>
@@ -79,7 +79,7 @@ function ScheduleNewAppointment() {
         <div className="col-start-3 col-span-3 row-start-1 row-span-2">
           <Calendar className="w-full" />
           <button
-            class="flex justify-center items-center gap-2 bg-gradient-to-tr custom-width mt-3 from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            class="flex justify-center items-center gap-2 bg-gradient-to-tr custom-width mt-6 from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             type="button"
           >
             <span>Go Back</span>
