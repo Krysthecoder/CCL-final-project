@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import img from '../assets/login-doctor-image.jpg';
 import CustomButton from '../components/Btn';
 import { CircledRightArrow, LoginIcon } from '../icons';
@@ -6,9 +6,10 @@ import { CircledRightArrow, LoginIcon } from '../icons';
 function LoginPage() {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
-  //const [userId, setUserId] = useState('');
+  const [authToken, setAuthToken] = useState('empty');
 
   async function loginMethod(email, password) {
+    setAuthToken('gettingAuthToken');
     const data = await fetch(
       'https://dental-clinic-be.onrender.com/auth/signin',
       {
@@ -23,9 +24,20 @@ function LoginPage() {
       }
     )
       .then((response) => response.json())
-      .then((json) => console.log(json, 'this is a json'))
+      .then((json) => window.localStorage.setItem('token', json.token))
       .catch((error) => console.log('this is an error'));
+
+    let token = window.localStorage.getItem('token'); // TODO: borrar el cgl y el let token y dejar solor el window.localStorage
+    console.log(token);
   }
+
+  function changeBTN() {
+    document.getElementById('log-btn').className.replace('flex', 'hidden');
+  }
+
+  useEffect(() => {
+    changeBTN();
+  }, [authToken]);
 
   return (
     <div className="flex w-5/6 items-center justify-center mt-16 gap-8 mx-auto">
@@ -73,13 +85,8 @@ function LoginPage() {
               icon={<CircledRightArrow />}
             />
 
-            {/* <CustomButton
-              title="Login"
-              // address="./CurrentSchedule"
-              icon={<LoginIcon />}
-              onClick={() => console.log('clicked')}
-            /> */}
             <button
+              id="log-btn"
               className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
               data-ripple-light="true"
@@ -90,6 +97,22 @@ function LoginPage() {
               <span>Log in</span>
               <LoginIcon />
             </button>
+
+            <button
+              id="loading-btn"
+              className="hidden justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              type="button"
+              data-ripple-light="true"
+            >
+              <span>Loading</span>
+              <LoginIcon />
+            </button>
+
+            {/* <CustomButton
+              title="Login"
+              address="./CurrentSchedule"
+              icon={<LoginIcon />}
+            /> */}
           </div>
         </form>
       </div>

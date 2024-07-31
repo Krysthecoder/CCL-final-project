@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { RegisterIcon, HomeIcon } from '../icons';
+import { RegisterIcon, HomeIcon, ContinueIcon } from '../icons';
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState('');
@@ -85,39 +85,35 @@ export default function SignUp() {
               <HomeIcon /> <span>Home</span>
             </button>
           </Link>
-          {/* <Link to="../">
-            <button
-              className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-              data-ripple-light="true"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"
-                />
-              </svg>{' '}
-              <span>Register</span>
-            </button>
-          </Link> */}
+
           <button
+            id="register"
             className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             type="button"
             data-ripple-light="true"
             onClick={() => {
               createUser(firstName, lastName, email, password);
+              document
+                .getElementById('register')
+                .classList.replace('flex', 'hidden');
+              document
+                .getElementById('continue')
+                .classList.replace('hidden', 'flex');
             }}
           >
             <RegisterIcon /> <span>Register</span>
           </button>
+
+          <Link to="/CurrentSchedule" id="continue" className="hidden">
+            <button
+              className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              type="button"
+              data-ripple-light="true"
+            >
+              <ContinueIcon />
+              <span>Continue</span>
+            </button>
+          </Link>
         </div>
       </form>
     </div>
