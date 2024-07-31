@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { RegisterIcon } from '../icons';
+import { RegisterIcon, HomeIcon } from '../icons';
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState('');
@@ -8,18 +8,23 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  useEffect(() => {
-    console.log(firstName);
-  }, [firstName]);
-  useEffect(() => {
-    console.log(lastName);
-  }, [lastName]);
-  useEffect(() => {
-    console.log(email);
-  }, [email]);
-  useEffect(() => {
-    console.log(password);
-  }, [password]);
+  async function createUser(firstName, lastName, email, password) {
+    await fetch('https://dental-clinic-be.onrender.com/user/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password
+      })
+    })
+      .then((response) => response.json())
+      .then((json) => console.log(json, 'this is a json')) //add a message that the email is already being used
+      .catch((error) => console.log('this is an error'));
+  }
 
   return (
     <div className="w-3/5 mt-32 flex justify-center items-center flex-col mx-auto">
@@ -77,21 +82,7 @@ export default function SignUp() {
               type="button"
               data-ripple-light="true"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-                />
-              </svg>{' '}
-              <span>Home</span>
+              <HomeIcon /> <span>Home</span>
             </button>
           </Link>
           {/* <Link to="../">
@@ -121,6 +112,9 @@ export default function SignUp() {
             className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             type="button"
             data-ripple-light="true"
+            onClick={() => {
+              createUser(firstName, lastName, email, password);
+            }}
           >
             <RegisterIcon /> <span>Register</span>
           </button>

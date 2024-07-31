@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import img from '../assets/login-doctor-image.jpg';
 import CustomButton from '../components/Btn';
 import { CircledRightArrow, LoginIcon } from '../icons';
@@ -9,9 +9,6 @@ function LoginPage() {
   //const [userId, setUserId] = useState('');
 
   async function loginMethod(email, password) {
-    console.log(typeof email);
-    console.log(typeof password);
-
     const data = await fetch(
       'https://dental-clinic-be.onrender.com/auth/signin',
       {
