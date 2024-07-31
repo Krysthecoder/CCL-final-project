@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import img from '../assets/login-doctor-image.jpg';
 import CustomButton from '../components/Btn';
-// import { loginMethod } from '../utils/apiMethods';
 import { CircledRightArrow, LoginIcon } from '../icons';
 
 function LoginPage() {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
-  const [userId, setUserId] = useState('');
+  //const [userId, setUserId] = useState('');
 
   async function loginMethod(email, password) {
     console.log(typeof email);
     console.log(typeof password);
+
     const data = await fetch(
       'https://dental-clinic-be.onrender.com/auth/signin',
       {
@@ -28,15 +28,7 @@ function LoginPage() {
       .then((response) => response.json())
       .then((json) => console.log(json, 'this is a json'))
       .catch((error) => console.log('this is an error'));
-    //setUserId(data);
   }
-
-  // useEffect(() => {
-  //   console.log(userEmail);
-  // }, [userEmail]);
-  // useEffect(() => {
-  //   console.log(userPassword);
-  // }, [userPassword]);
 
   return (
     <div className="flex w-5/6 items-center justify-center mt-16 gap-8 mx-auto">

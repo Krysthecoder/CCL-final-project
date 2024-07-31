@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { RegisterIcon } from '../icons';
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState('');
@@ -7,6 +8,15 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  useEffect(() => {
+    console.log(firstName);
+  }, [firstName]);
+  useEffect(() => {
+    console.log(lastName);
+  }, [lastName]);
+  useEffect(() => {
+    console.log(email);
+  }, [email]);
   useEffect(() => {
     console.log(password);
   }, [password]);
@@ -63,7 +73,7 @@ export default function SignUp() {
         <div className="flex justify-evenly mt-6 py-5 gap-10">
           <Link to="../">
             <button
-              class="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr w-42 from-sky-600 to-sky-900 py-2 px-10 align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr w-42 from-sky-600 to-sky-900 py-2 px-10 align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
               data-ripple-light="true"
             >
@@ -84,7 +94,7 @@ export default function SignUp() {
               <span>Home</span>
             </button>
           </Link>
-          <Link to="../">
+          {/* <Link to="../">
             <button
               className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
@@ -106,7 +116,14 @@ export default function SignUp() {
               </svg>{' '}
               <span>Register</span>
             </button>
-          </Link>
+          </Link> */}
+          <button
+            className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            type="button"
+            data-ripple-light="true"
+          >
+            <RegisterIcon /> <span>Register</span>
+          </button>
         </div>
       </form>
     </div>
