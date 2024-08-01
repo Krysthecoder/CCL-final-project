@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import img from '../assets/login-doctor-image.jpg';
 import { utilsData } from '../utils/utilsData';
-import { Link } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import { CircledRightArrow, LoginIcon } from '../icons';
 import { CircularProgress } from '@mui/material';
 
@@ -38,6 +38,7 @@ function LoginPage() {
         window.localStorage.setItem('token', json.token);
         setErrorHidden(true);
         setSigningStatus('succesStatus');
+        return redirect('/CurrentSchedule');
       }
     } catch (error) {
       console.log('An error occurred:', error);
@@ -162,7 +163,6 @@ function LoginPage() {
               type="button"
             >
               <span>Welcome!</span>
-              <LoginIcon />
             </div>
           </div>
           <div className="mt-4 h-6">
