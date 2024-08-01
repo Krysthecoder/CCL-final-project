@@ -1,5 +1,4 @@
-export const userData = {
-  userEmail: '',
-  userID: '',
-  userPassword: ''
+export const utilsData = {
+  apiURL: 'https://dental-clinic-be.onrender.com/',
+  apiSignInRoute: 'auth/signin'
 };

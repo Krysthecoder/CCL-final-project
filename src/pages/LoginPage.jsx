@@ -1,43 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import img from '../assets/login-doctor-image.jpg';
-import CustomButton from '../components/Btn';
+import { utilsData } from '../utils/utilsData';
+import { Link } from 'react-router-dom';
 import { CircledRightArrow, LoginIcon } from '../icons';
+import { Rings } from 'react-loading-icons';
 
 function LoginPage() {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
-  const [authToken, setAuthToken] = useState('empty');
+  const [errorHidden, setErrorHidden] = useState(true);
+  const [signinStatus, setSigningStatus] = useState('initialStatus');
 
   async function loginMethod(email, password) {
-    setAuthToken('gettingAuthToken');
-    const data = await fetch(
-      'https://dental-clinic-be.onrender.com/auth/signin',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        })
+    try {
+      setSigningStatus('gettingStatus');
+      const response = await fetch(
+        utilsData.apiURL + utilsData.apiSignInRoute,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password
+          })
+        }
+      );
+
+      if (response.status === 400) {
+        console.log('please check your credentials');
+        setErrorHidden(false);
+        setSigningStatus('failedStatus');
+      } else {
+        const json = await response.json();
+        window.localStorage.setItem('token', json.token);
+        setErrorHidden(true);
+        setSigningStatus('succesStatus');
       }
-    )
-      .then((response) => response.json())
-      .then((json) => window.localStorage.setItem('token', json.token))
-      .catch((error) => console.log('this is an error'));
-
-    let token = window.localStorage.getItem('token'); // TODO: borrar el cgl y el let token y dejar solor el window.localStorage
-    console.log(token);
+    } catch (error) {
+      console.log('An error occurred:', error);
+    }
   }
-
-  function changeBTN() {
-    document.getElementById('log-btn').className.replace('flex', 'hidden');
-  }
-
-  useEffect(() => {
-    changeBTN();
-  }, [authToken]);
 
   return (
     <div className="flex w-5/6 items-center justify-center mt-16 gap-8 mx-auto">
@@ -57,7 +61,7 @@ function LoginPage() {
           >
             Email:
             <input
-              type="text"
+              type="email"
               placeholder="juanitopancracio@gmail.com"
               className="text-sm w-4/6 pl-2 border-2  border-sky-600 rounded-lg py-1"
               value={userEmail}
@@ -79,15 +83,31 @@ function LoginPage() {
           </label>
 
           <div className="flex justify-evenly mt-6 py-5 gap-6">
-            <CustomButton
-              title="Sign-up"
-              address="./SignUp"
-              icon={<CircledRightArrow />}
-            />
+            <Link
+              to="./signup"
+              className={
+                signinStatus === 'initialStatus'
+                  ? 'flex'
+                  : signinStatus === 'failedStatus'
+                  ? 'flex'
+                  : 'hidden'
+              }
+            >
+              <button
+                className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                type="button"
+              >
+                <span>Sign-up</span>
+                <CircledRightArrow />
+              </button>
+            </Link>
 
             <button
-              id="log-btn"
-              className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className={
+                signinStatus === 'initialStatus'
+                  ? 'flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
+                  : 'hidden'
+              }
               type="button"
               data-ripple-light="true"
               onClick={() => {
@@ -99,20 +119,51 @@ function LoginPage() {
             </button>
 
             <button
-              id="loading-btn"
-              className="hidden justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className={
+                signinStatus === 'gettingStatus'
+                  ? 'flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
+                  : 'hidden'
+              }
               type="button"
-              data-ripple-light="true"
             >
-              <span>Loading</span>
+              <span>Loadging</span>
+              <Rings />
+            </button>
+
+            <button
+              className={
+                signinStatus === 'failedStatus'
+                  ? 'flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
+                  : 'hidden'
+              }
+              type="button"
+            >
+              <span>Failed</span>
               <LoginIcon />
             </button>
 
-            {/* <CustomButton
-              title="Login"
-              address="./CurrentSchedule"
-              icon={<LoginIcon />}
-            /> */}
+            <div
+              className={
+                signinStatus === 'succesStatus'
+                  ? 'flex justify-center items-center gap-2 rounded-lg w-96 bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white  transition-all shadow-lg shadow-pink-500/40 '
+                  : 'hidden'
+              }
+              type="button"
+            >
+              <span>Welcome!</span>
+              <LoginIcon />
+            </div>
+          </div>
+          <div className="mt-4 h-6">
+            <p
+              className={
+                errorHidden
+                  ? 'hidden'
+                  : 'flex text-xs text-red-700 justify-center'
+              }
+            >
+              There is something wrong with your credentials, try again.
+            </p>
           </div>
         </form>
       </div>
