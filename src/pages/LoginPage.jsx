@@ -40,13 +40,19 @@ function LoginPage() {
         window.localStorage.setItem('token', json.token);
         setErrorHidden(true);
         setSigningStatus('succesStatus');
-        navigate({
-          pathname: '/CurrentSchedule'
-        });
+        pageRedirecter();
       }
     } catch (error) {
       console.log('An error occurred:', error);
     }
+  }
+
+  function pageRedirecter() {
+    setTimeout(() => {
+      navigate({
+        pathname: '/CurrentSchedule'
+      });
+    }, 1500);
   }
 
   function btnResetter() {
@@ -96,7 +102,7 @@ function LoginPage() {
 
           <div className="flex justify-evenly mt-6 py-5 gap-6">
             <Link
-              to="./signup"
+              to="./SignUp"
               className={
                 signinStatus === 'initialStatus'
                   ? 'flex'
@@ -158,13 +164,12 @@ function LoginPage() {
               <UserDeniedIcon />
             </button>
 
-            <Link to={'./CurrentSchedule'}>
+            <Link
+              to={'./CurrentSchedule'}
+              className={signinStatus === 'succesStatus' ? 'flex' : 'hidden'}
+            >
               <div
-                className={
-                  signinStatus === 'succesStatus'
-                    ? 'flex justify-center items-center gap-2 rounded-lg w-96 bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white  transition-all shadow-lg shadow-pink-500/40 '
-                    : 'hidden'
-                }
+                className="justify-center items-center gap-2 rounded-lg w-96 bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white  transition-all shadow-lg shadow-pink-500/40 "
                 type="button"
               >
                 <span>Welcome!</span>

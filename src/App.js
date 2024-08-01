@@ -9,7 +9,7 @@ import LoginPage from './pages/LoginPage';
 import SignUp from './pages/SignUp';
 import CurrentSchedule from './pages/CurrentSchedule';
 import ScheduleNewAppointment from './pages/ScheduleNewAppointment';
-import ProtectedRoutes from './ProtectedRoutes';
+import ProtectedRoutes from './pages/ProtectedRoutes';
 
 function App() {
   return (
