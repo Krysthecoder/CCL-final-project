@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import img from '../assets/login-doctor-image.jpg';
 import { utilsData } from '../utils/utilsData';
-import { Link, redirect } from 'react-router-dom';
-import { CircledRightArrow, LoginIcon } from '../icons';
+import { Link, useNavigate } from 'react-router-dom';
+import { CircledRightArrow, LoginIcon, UserDeniedIcon } from '../icons';
 import { CircularProgress } from '@mui/material';
 
 function LoginPage() {
+  const navigate = useNavigate();
+
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [errorHidden, setErrorHidden] = useState(true);
@@ -38,7 +40,9 @@ function LoginPage() {
         window.localStorage.setItem('token', json.token);
         setErrorHidden(true);
         setSigningStatus('succesStatus');
-        return redirect('/CurrentSchedule');
+        navigate({
+          pathname: '/CurrentSchedule'
+        });
       }
     } catch (error) {
       console.log('An error occurred:', error);
@@ -151,19 +155,21 @@ function LoginPage() {
               type="button"
             >
               <span>Failed</span>
-              <LoginIcon />
+              <UserDeniedIcon />
             </button>
 
-            <div
-              className={
-                signinStatus === 'succesStatus'
-                  ? 'flex justify-center items-center gap-2 rounded-lg w-96 bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white  transition-all shadow-lg shadow-pink-500/40 '
-                  : 'hidden'
-              }
-              type="button"
-            >
-              <span>Welcome!</span>
-            </div>
+            <Link to={'./CurrentSchedule'}>
+              <div
+                className={
+                  signinStatus === 'succesStatus'
+                    ? 'flex justify-center items-center gap-2 rounded-lg w-96 bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white  transition-all shadow-lg shadow-pink-500/40 '
+                    : 'hidden'
+                }
+                type="button"
+              >
+                <span>Welcome!</span>
+              </div>
+            </Link>
           </div>
           <div className="mt-4 h-6">
             <p

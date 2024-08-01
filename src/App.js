@@ -1,5 +1,10 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate
+} from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignUp from './pages/SignUp';
 import CurrentSchedule from './pages/CurrentSchedule';
@@ -16,12 +21,18 @@ function App() {
             <Route path="/SignUp" element={<SignUp />} />
 
             <Route element={<ProtectedRoutes />}>
-              <Route path="/CurrentSchedule" element={<CurrentSchedule />} />
+              <Route
+                exact
+                path="/CurrentSchedule"
+                element={<CurrentSchedule />}
+              />
               <Route
                 path="/ScheduleNewAppointment"
                 element={<ScheduleNewAppointment />}
               />
             </Route>
+
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
       </Router>
