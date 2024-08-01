@@ -3,7 +3,7 @@ import img from '../assets/login-doctor-image.jpg';
 import { utilsData } from '../utils/utilsData';
 import { Link } from 'react-router-dom';
 import { CircledRightArrow, LoginIcon } from '../icons';
-import { Rings } from 'react-loading-icons';
+import { CircularProgress } from '@mui/material';
 
 function LoginPage() {
   const [userEmail, setUserEmail] = useState('');
@@ -32,6 +32,7 @@ function LoginPage() {
         console.log('please check your credentials');
         setErrorHidden(false);
         setSigningStatus('failedStatus');
+        btnResetter();
       } else {
         const json = await response.json();
         window.localStorage.setItem('token', json.token);
@@ -41,6 +42,12 @@ function LoginPage() {
     } catch (error) {
       console.log('An error occurred:', error);
     }
+  }
+
+  function btnResetter() {
+    setTimeout(() => {
+      setSigningStatus('initialStatus');
+    }, 1500);
   }
 
   return (
@@ -118,17 +125,21 @@ function LoginPage() {
               <LoginIcon />
             </button>
 
-            <button
+            <div
               className={
                 signinStatus === 'gettingStatus'
                   ? 'flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
                   : 'hidden'
               }
-              type="button"
             >
-              <span>Loadging</span>
-              <Rings />
-            </button>
+              <span>Loading</span>
+              <CircularProgress
+                size={20}
+                sx={{
+                  color: 'white'
+                }}
+              />
+            </div>
 
             <button
               className={
