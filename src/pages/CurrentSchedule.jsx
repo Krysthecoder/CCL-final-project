@@ -1,13 +1,116 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { CalendarIcon } from '../icons';
 import NavBar from '../components/NavBar/index';
+import { utilsData } from '../utils/utilsData';
+import { format } from '@formkit/tempo';
 
 function CurrentSchedule() {
   const [value, onChange] = useState(new Date());
+  const [currentAppts, setCurrentAppts] = useState([]);
+
+  // async function appointmentsGetter(email, password) {
+  //   try {
+  //     const response = await fetch(
+  //       utilsData.apiURL + utilsData.apiGetCurrentAppointments,
+  //       {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'x-token': window.localStorage.getItem('token')
+  //         },
+  //         body: JSON.stringify()
+  //       }
+  //     );
+
+  //     if (response.status === 400) {
+  //       console.log('please check your credentials');
+  //     } else {
+  //       const json = await response.json();
+  //       setCurrentAppts(json);
+  //       console.log('success');
+  //     }
+  //   } catch (error) {
+  //     console.log('An error occurred:', error);
+  //   }
+  // }
+  // async function appointmentsGetter() {
+  //   const url = utilsData.apiURL + utilsData.apiGetCurrentAppointments;
+  //   const token = window.localStorage.getItem('token');
+  //   await fetch(url, {
+  //     method: 'GET',
+  //     headers: {
+  //       'x-access-token': token
+  //     }
+  //   })
+  //     .then((response) =>
+  //       response.json().then((data) => {
+  //         setCurrentAppts(data.appointments);
+  //         console.log(data.appointments);
+
+  //         console.log(currentAppts);
+  //       })
+  //     )
+  //     .catch((err) => console.log('error'));
+  // }
+
+  // const [currentAppts, setCurrentAppts] = useState([]);
+
+  // async function appointmentsGetter(email, password) {
+  //   try {
+  //     const response = await fetch(
+  //       utilsData.apiURL + utilsData.apiGetCurrentAppointments,
+  //       {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'x-token': window.localStorage.getItem('token')
+  //         },
+  //         body: JSON.stringify()
+  //       }
+  //     );
+
+  //     if (response.status === 400) {
+  //       console.log('please check your credentials');
+  //     } else {
+  //       const json = await response.json();
+  //       setCurrentAppts(json);
+  //       console.log('success');
+  //     }
+  //   } catch (error) {
+  //     console.log('An error occurred:', error);
+  //   }
+  // }
+  async function appointmentsGetter() {
+    const url = utilsData.apiURL + utilsData.apiGetCurrentAppointments;
+    const token = window.localStorage.getItem('token');
+    await fetch(url, {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
+      .then((response) =>
+        response.json().then((data) => {
+          setCurrentAppts(data.appointments);
+          console.log(data.appointments, 'the data thin');
+
+          console.log(currentAppts, 'the reliable hook');
+        })
+      )
+      .catch((err) => console.log('error'));
+  }
+
+  useEffect(() => {
+    appointmentsGetter();
+  }, []);
+
+  useEffect(() => {
+    console.log(currentAppts, 'the effect thing');
+  }, [currentAppts]);
 
   return (
     <div>
@@ -22,15 +125,40 @@ function CurrentSchedule() {
               <th className="border-x-4 border-sky-100">Start Time</th>
               <th className="border-x-4 border-sky-100">End Time</th>
             </tr>
-            <tr>
+            {/* <tr>
               <td className="border-4 border-sky-100 text-sm">
                 Appointment with Krysthopher
               </td>
               <td className="border-4 border-sky-100 text-sm">8am</td>
               <td className="border-4 border-sky-100 text-sm">9am</td>
-            </tr>
+            </tr> */}
+
+            {currentAppts.length > 0 ? (
+              currentAppts.map((el) => {
+                return (
+                  <tr>
+                    <td>{el.title}</td>
+                    <td>
+                      {format(el.startTime, {
+                        time: 'short',
+                        date: 'short'
+                      })}
+                    </td>
+                    <td>
+                      {format(el.endTime, {
+                        time: 'short',
+                        date: 'short'
+                      })}
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <>fail</>
+            )}
           </table>
         </div>
+
         <div className="col-start-5 col-span-3 row-start-1 row-span-2">
           <Link to="../ScheduleNewAppointment">
             <button
