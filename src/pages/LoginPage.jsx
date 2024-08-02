@@ -41,6 +41,7 @@ function LoginPage() {
         setErrorHidden(true);
         setSigningStatus('succesStatus');
         pageRedirecter();
+        console.log('success');
       }
     } catch (error) {
       console.log('An error occurred:', error);

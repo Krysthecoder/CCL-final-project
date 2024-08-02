@@ -34,7 +34,7 @@ function CurrentSchedule() {
         <div className="col-start-5 col-span-3 row-start-1 row-span-2">
           <Link to="../ScheduleNewAppointment">
             <button
-              class="flex justify-center items-center gap-2 bg-gradient-to-tr w-full mt-3 mb-4 from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="flex justify-center items-center gap-2 bg-gradient-to-tr w-full mt-3 mb-4 from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
             >
               <span>Schedule new appointment</span>
