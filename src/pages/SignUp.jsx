@@ -69,7 +69,7 @@ export default function SignUp() {
           Email:
           <input
             type="text"
-            placeholder="JuanitoS@gmail.com"
+            placeholder="youremail@email.com"
             className="w-3/6 pl-2 border-2  border-sky-600 rounded-lg py-1"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -81,7 +81,7 @@ export default function SignUp() {
           Password:
           <input
             type="password"
-            placeholder="********"
+            placeholder="****"
             className="w-3/6 pl-2 border-2  border-sky-600 rounded-lg py-1"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -101,7 +101,7 @@ export default function SignUp() {
 
           <div className={singupStatus === 'initialStatus' ? 'flex' : 'hidden'}>
             <button
-              className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="custom-btn-styles"
               type="button"
               data-ripple-light="true"
               onSubmit={() => {
@@ -116,7 +116,7 @@ export default function SignUp() {
             className={singupStatus === 'processingStatus' ? 'flex' : 'hidden'}
           >
             <div
-              className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="custom-btn-styles"
               type="button"
               data-ripple-light="true"
             >
@@ -129,7 +129,7 @@ export default function SignUp() {
             to="/CurrentSchedule"
             className={singupStatus === 'failedStatus' ? 'flex' : 'hidden'}
           >
-            <div className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+            <div className="custom-btn-styles">
               <ContinueIcon />
               <span>Failed</span>
             </div>
@@ -140,7 +140,7 @@ export default function SignUp() {
             className={singupStatus === 'successStatus' ? 'flex' : 'hidden'}
           >
             <button
-              className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="custom-btn-styles"
               type="button"
               data-ripple-light="true"
             >

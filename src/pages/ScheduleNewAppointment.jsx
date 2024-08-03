@@ -68,7 +68,7 @@ function ScheduleNewAppointment() {
             </label>
 
             <button
-              class="flex justify-center items-center gap-2 bg-gradient-to-tr mx-auto mt-6 rounded-lg from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="flex justify-center items-center gap-2 bg-gradient-to-tr mx-auto mt-6 rounded-lg from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
             >
               <span>Schedule</span>
@@ -81,7 +81,7 @@ function ScheduleNewAppointment() {
           <Calendar className="w-full" />
           <Link to="../CurrentSchedule">
             <button
-              class="flex justify-center items-center gap-2 bg-gradient-to-tr custom-width mt-6 from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+              className="flex justify-center items-center gap-2 bg-gradient-to-tr custom-width mt-6 from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
               type="button"
             >
               <span>Go Back</span>

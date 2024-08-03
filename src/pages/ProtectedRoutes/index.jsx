@@ -1,8 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
 const useAuth = () => {
-  const user = { loggedIn: window.localStorage.getItem('token') };
-  return user && user.loggedIn;
+  const userLogonStatus = {
+    loggedIn: window.localStorage.getItem('fetchedToken')
+  };
+  return userLogonStatus;
 };
 
 const ProtectedRoutes = () => {

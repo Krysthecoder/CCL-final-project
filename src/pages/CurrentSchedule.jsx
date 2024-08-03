@@ -86,7 +86,7 @@ function CurrentSchedule() {
   // }
   async function appointmentsGetter() {
     const url = utilsData.apiURL + utilsData.apiGetCurrentAppointments;
-    const token = window.localStorage.getItem('token');
+    const token = window.localStorage.getItem('fetchedToken');
     await fetch(url, {
       method: 'GET',
       headers: {
@@ -137,14 +137,14 @@ function CurrentSchedule() {
               currentAppts.map((el) => {
                 return (
                   <tr>
-                    <td>{el.title}</td>
-                    <td>
+                    <td className="border-x-4 border-sky-100">{el.title}</td>
+                    <td className="border-x-4 border-sky-100">
                       {format(el.startTime, {
                         time: 'short',
                         date: 'short'
                       })}
                     </td>
-                    <td>
+                    <td className="border-x-4 border-sky-100">
                       {format(el.endTime, {
                         time: 'short',
                         date: 'short'
