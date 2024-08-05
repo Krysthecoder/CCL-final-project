@@ -105,7 +105,7 @@ function LoginPage() {
           autoComplete="off"
           className="flex flex-col w-4/5 mx-auto gap-4 mt-6"
         >
-          <div className="flex justify-between ">
+          <div className="flex justify-between">
             <label>Email</label>
             <input
               value={values.email}
