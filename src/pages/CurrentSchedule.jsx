@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { CalendarIcon } from '../icons';
 import NavBar from '../components/NavBar/index';
 import { utilsData } from '../utils/utilsData';
