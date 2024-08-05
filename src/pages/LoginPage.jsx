@@ -2,10 +2,15 @@ import React, { useState } from 'react';
 import img from '../assets/login-doctor-image.jpg';
 import { useFormik } from 'formik';
 import { utilsData } from '../utils/utilsData';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CircledRightArrow, LoginIcon, UserDeniedIcon } from '../icons';
 import { loginSchema } from '../schemas';
 import { CircularProgress } from '@mui/material';
+import {
+  CustomBtn,
+  CustomBtnInnerContent,
+  CustomLinkBtn
+} from '../components/CustomBtns';
 
 function LoginPage() {
   const [signinStatus, setSigningStatus] = useState('initialStatus');
@@ -35,6 +40,11 @@ function LoginPage() {
         setSigningStatus('failedStatus');
         btnResetter();
       } else if (response.status === 401) {
+        setErrorMsg('Bad Credentials, please try again!');
+        setSigningStatus('failedStatus');
+        setIsLoggedIn('unauthorized');
+        btnResetter();
+      } else if (response.status === 404) {
         setErrorMsg('Bad Credentials, please try again!');
         setSigningStatus('failedStatus');
         setIsLoggedIn('unauthorized');
@@ -137,10 +147,13 @@ function LoginPage() {
                 : 'hidden'
             }
           >
-            <Link to={'/SignUp'} className="custom-btn-styles">
-              <span>Sign-up</span>
-              <CircledRightArrow />
-            </Link>
+            <CustomLinkBtn
+              path={'/SignUp'}
+              className={'custom-btn-styles'}
+              text="Sign-up"
+              icon={<CircledRightArrow />}
+            />
+
             <button type="submit">
               <span
                 className={
@@ -149,8 +162,7 @@ function LoginPage() {
                     : 'hidden'
                 }
               >
-                <span>Log in</span>
-                <LoginIcon />
+                <CustomBtnInnerContent text={'Log In'} icon={<LoginIcon />} />
               </span>
               <span
                 className={
@@ -159,12 +171,16 @@ function LoginPage() {
                     : 'hidden'
                 }
               >
-                <span>Loading</span>
-                <CircularProgress
-                  size={20}
-                  sx={{
-                    color: 'white'
-                  }}
+                <CustomBtnInnerContent
+                  text={'Loading'}
+                  icon={
+                    <CircularProgress
+                      size={20}
+                      sx={{
+                        color: 'white'
+                      }}
+                    />
+                  }
                 />
               </span>
               <span
@@ -174,18 +190,20 @@ function LoginPage() {
                     : 'hidden'
                 }
               >
-                <span>Failed</span>
-                <UserDeniedIcon />
+                <CustomBtnInnerContent
+                  text={'Failed'}
+                  icon={<UserDeniedIcon />}
+                />
               </span>
             </button>
           </div>
           <div className={isLoggedIn === 'authorized' ? 'flex' : 'hidden'}>
-            <div
-              className="justify-center items-center rounded-lg w-96 mt-4 bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white  transition-all shadow-lg shadow-pink-500/40 "
-              type="button"
-            >
-              <span>Welcome!</span>
-            </div>
+            <CustomBtn
+              className={
+                'justify-center items-center rounded-lg w-96 mt-4 bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white  transition-all shadow-lg shadow-pink-500/40'
+              }
+              text={'Welcome Back!'}
+            />
           </div>
         </form>
       </div>
