@@ -139,7 +139,11 @@ function LoginPage() {
             />
           </div>
           {errors.password && touched.password && <p>{errors.password}</p>}
-          {isLoggedIn === 'unauthorized' && <p>{errorMsg}</p>}
+          {isLoggedIn === 'unauthorized' && (
+            <p className="flex justify-center text-sm mt-3 text-red-700">
+              {errorMsg}
+            </p>
+          )}
           <div
             className={
               signinStatus !== 'succesStatus'
