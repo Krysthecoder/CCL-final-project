@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-// import Calendar from 'react-calendar';
-// import 'react-calendar/dist/Calendar.css';
 import { CalendarIcon } from '../icons';
 import NavBar from '../components/NavBar/index';
 import { utilsData } from '../utils/utilsData';
 import { format } from '@formkit/tempo';
 
 function CurrentSchedule() {
-  const [value, onChange] = useState(new Date());
   const [currentAppts, setCurrentAppts] = useState([]);
 
   async function appointmentsGetter() {
@@ -23,7 +20,6 @@ function CurrentSchedule() {
       .then((response) =>
         response.json().then((data) => {
           setCurrentAppts(data.appointments);
-          console.log(data.appointments);
         })
       )
       .catch((err) => console.log('error', err));

@@ -4,6 +4,7 @@ import Calendar from 'react-calendar';
 import { GoBackIcon, ScheduleIcon } from '../icons';
 import { Link } from 'react-router-dom';
 import '../customStyles/customStyles.css';
+import 'react-calendar/dist/Calendar.css';
 
 function ScheduleNewAppointment() {
   const officeHrsArr = [
