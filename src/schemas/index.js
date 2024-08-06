@@ -35,3 +35,10 @@ export const signupSchema = yup.object().shape({
     .oneOf([yup.ref('password'), null], 'passport must match')
     .required('Required')
 });
+
+export const createAppoitmentSchema = yup.object().shape({
+  title: yup.string().required("Title Required"),
+  startTime: yup.number().required("Start Time Required"),
+  endTime: yup.number().required("End-time is required!s"),
+  description: yup.string().required("Please enter a description!")
+})
