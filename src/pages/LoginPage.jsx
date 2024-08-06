@@ -106,7 +106,7 @@ function LoginPage() {
           className="flex flex-col w-4/5 mx-auto gap-4 mt-6"
         >
           <div className="flex justify-between">
-            <label>Email</label>
+            <label>Email:</label>
             <input
               value={values.email}
               onChange={handleChange}
@@ -123,7 +123,7 @@ function LoginPage() {
           </div>
           {errors.email && touched.email && <p>{errors.email}</p>}
           <div className="flex justify-between">
-            <label>Password</label>
+            <label>Password:</label>
             <input
               value={values.password}
               onChange={handleChange}
