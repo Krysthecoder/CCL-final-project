@@ -5,6 +5,7 @@ import { GoBackIcon, ScheduleIcon } from '../icons';
 import { Link } from 'react-router-dom';
 import '../customStyles/customStyles.css';
 import 'react-calendar/dist/Calendar.css';
+import { CustomLinkBtn } from '../components/CustomBtns';
 
 function ScheduleNewAppointment() {
   const officeHrsArr = [
@@ -37,7 +38,7 @@ function ScheduleNewAppointment() {
               Title:
               <input
                 type="text"
-                placeholder="Juanito"
+                placeholder="Enter the appointment title"
                 className="w-7/12 pl-2 border-2  border-sky-600 rounded-lg py-1"
               />
             </label>
@@ -63,7 +64,7 @@ function ScheduleNewAppointment() {
               Description:
               <textarea
                 type="text"
-                placeholder="Juanito"
+                placeholder="Enter a description"
                 className="w-7/12 pl-2 border-2 text-sm h-20 border-sky-600 rounded-lg py-1"
               />
             </label>
@@ -79,16 +80,16 @@ function ScheduleNewAppointment() {
         </div>
 
         <div className="col-start-3 col-span-3 row-start-1 row-span-2">
+          <CustomLinkBtn
+            path={'../CurrentSchedule'}
+            className={
+              'flex justify-center items-center gap-2 bg-gradient-to-tr custom-width mb-6 from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
+            }
+            text={'Go Back'}
+            icon={<GoBackIcon />}
+          />
+
           <Calendar className="w-full" />
-          <Link to="../CurrentSchedule">
-            <button
-              className="flex justify-center items-center gap-2 bg-gradient-to-tr custom-width mt-6 from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-            >
-              <span>Go Back</span>
-              <GoBackIcon />
-            </button>
-          </Link>
         </div>
       </div>
     </div>
