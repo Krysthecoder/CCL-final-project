@@ -2,34 +2,38 @@ import React from 'react';
 import NavBar from '../components/NavBar';
 import Calendar from 'react-calendar';
 import { GoBackIcon, ScheduleIcon } from '../icons';
-import '../customStyles/customStyles.css';
-import 'react-calendar/dist/Calendar.css';
 import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
 import { Form, Formik } from 'formik';
 import { CustomInput, CustomAreaInput } from '../components/CustomInput';
 import { createAppoitmentSchema } from '../schemas';
 import { CustomSelect } from '../components/CustomSelect';
+import { officeHours, utilsData } from '../utils/utilsData';
+import 'react-calendar/dist/Calendar.css';
 
 function ScheduleNewAppointment() {
-  const timeSchedule = [
-    { value: '09:00:00', label: '9:00 am' },
-    { value: '09:30:00', label: '9:30 am' },
-    { value: '10:00:00', label: '10:00 am' },
-    { value: '10:30:00', label: '10:30 am' },
-    { value: '11:00:00', label: '11:00 am' },
-    { value: '11:30:00', label: '11:30 am' },
-    { value: '12:00:00', label: '12:00 pm' },
-    { value: '12:30:00', label: '12:30 pm' },
-    { value: '13:00:00', label: '1:00 pm' },
-    { value: '13:30:00', label: '1:30 pm' },
-    { value: '14:00:00', label: '2:00 pm' },
-    { value: '14:30:00', label: '2:30 pm' },
-    { value: '15:00:00', label: '3:00 pm' },
-    { value: '15:30:00', label: '3:30 pm' },
-    { value: '16:00:00', label: '4:00 pm' },
-    { value: '16:30:00', label: '4:30 pm' },
-    { value: '17:00:00', label: '5:00 pm' }
-  ];
+  // async function appointmentsGetter() {
+  //   const url = utilsData.apiURL + utilsData.apiGetCurrentAppointments;
+  //   const token = window.localStorage.getItem('fetchedToken');
+  //   await fetch(url, {
+  //     method: 'GET',
+  //     headers: {
+  //       'x-access-token': token
+  //     },
+  //     body: JSON.stringify({
+  //       // title: ,
+  //       // user: ,
+  //       // startTime: ,
+  //       // endTime: ,
+  //       // createdBy:
+  //     })
+  //   })
+  //     .then((response) =>
+  //       response.json().then((data) => {
+  //         //setCurrentAppts(data.appointments);
+  //       })
+  //     )
+  //     .catch((err) => console.log('error', err));
+  // }
 
   return (
     <div>
@@ -63,7 +67,7 @@ function ScheduleNewAppointment() {
                   placeHolder="Please select the start time"
                 >
                   <option value="">Please select the start time </option>
-                  {timeSchedule.map((el) => {
+                  {officeHours.map((el) => {
                     return <option value={el.value}>{el.label}</option>;
                   })}
                 </CustomSelect>
@@ -74,7 +78,7 @@ function ScheduleNewAppointment() {
                   placeHolder="Please select the end time"
                 >
                   <option value="">Please select the start time </option>
-                  {timeSchedule.map((el) => {
+                  {officeHours.map((el) => {
                     return <option value={el.value}>{el.label}</option>;
                   })}
                 </CustomSelect>

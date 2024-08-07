@@ -57,6 +57,9 @@ function LoginPage() {
           setIsLoggedIn('authorized');
           pageRedirecter();
         }
+        if (json.user._id.length > 0) {
+          localStorage.setItem('userId', json.user._id);
+        }
       }
     } catch (error) {
       setErrorMsg('An error occurred:', error);
@@ -107,38 +110,51 @@ function LoginPage() {
         >
           <div className="flex justify-between">
             <label>Email:</label>
-            <input
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              type="email"
-              id="email"
-              placeholder="youremail@email.com"
-              className={
-                errors.email && touched.email
-                  ? 'text-sm  pl-2 border-2 w-4/6 border-red-600 rounded-lg py-1'
-                  : 'text-sm  pl-2 border-2 w-4/6 border-sky-600 rounded-lg py-1'
-              }
-            />
+            <div className="flex flex-col w-4/6">
+              <input
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                type="email"
+                id="email"
+                placeholder="youremail@email.com"
+                className={
+                  errors.email && touched.email
+                    ? 'text-sm  pl-2 border-2 w-full border-red-600 rounded-lg py-1'
+                    : 'text-sm  pl-2 border-2 w-full border-sky-600 rounded-lg py-1'
+                }
+              />
+              {errors.email && touched.email && (
+                <p className="text-sm text-red-600 flex mr-2 justify-end">
+                  {errors.email}
+                </p>
+              )}
+            </div>
           </div>
-          {errors.email && touched.email && <p>{errors.email}</p>}
           <div className="flex justify-between">
             <label>Password:</label>
-            <input
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              type="password"
-              id="password"
-              placeholder="your password"
-              className={
-                errors.password && touched.password
-                  ? 'text-sm  pl-2 border-2 w-4/6 border-red-600 rounded-lg py-1'
-                  : 'text-sm  pl-2 border-2 w-4/6 border-sky-600 rounded-lg py-1'
-              }
-            />
+            <div className="flex flex-col w-4/6">
+              <input
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                type="password"
+                id="password"
+                placeholder="your password"
+                className={
+                  errors.password && touched.password
+                    ? 'text-sm  pl-2 border-2 w-full border-red-600 rounded-lg py-1'
+                    : 'text-sm  pl-2 border-2 w-full border-sky-600 rounded-lg py-1'
+                }
+              />
+              {errors.password && touched.password && (
+                <p className="text-sm text-red-600 flex mr-2 justify-end">
+                  {errors.password}
+                </p>
+              )}
+            </div>
           </div>
-          {errors.password && touched.password && <p>{errors.password}</p>}
+
           {isLoggedIn === 'unauthorized' && (
             <p className="flex justify-center text-sm mt-3 text-red-700">
               {errorMsg}

@@ -11,7 +11,7 @@ export default function SignUp() {
   const navigate = useNavigate();
   const [signupStatus, setSignupStatus] = useState('initialStatus');
 
-  async function createUser(email, password) {
+  const createUser = async (email, password) => {
     try {
       setSignupStatus('loadingStatus');
       const response = await fetch(
@@ -42,21 +42,21 @@ export default function SignUp() {
     } catch (error) {
       console.log('An error occurred:', error);
     }
-  }
+  };
 
-  function statusReset() {
+  const statusReset = () => {
     setTimeout(() => {
       setSignupStatus('initialStatus');
     }, 1500);
-  }
+  };
 
-  function pageRedirecter() {
+  const pageRedirecter = () => {
     setTimeout(() => {
       navigate({
         pathname: '/CurrentSchedule'
       });
     }, 1500);
-  }
+  };
 
   const onSubmit = (values, actions) => {
     createUser(values.email, values.password);
@@ -84,60 +84,78 @@ export default function SignUp() {
         autoComplete="off"
         className="flex flex-col w-4/6 mx-auto gap-4 mt-6"
       >
-        <div className="flex justify-between">
+        <div className="flex justify-between mt">
           <label>Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={values.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            placeholder="youremail@email.com"
-            className={
-              errors.email && touched.email
-                ? 'text-sm  pl-2 border-2 w-4/6 border-red-600 rounded-lg py-1'
-                : 'text-sm  pl-2 border-2 w-4/6 border-sky-600 rounded-lg py-1'
-            }
-          />
+          <div className="flex flex-col w-4/6">
+            <input
+              type="email"
+              id="email"
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              placeholder="youremail@email.com"
+              className={
+                errors.email && touched.email
+                  ? 'text-sm  pl-2 border-2 w-full border-red-600 rounded-lg py-1'
+                  : 'text-sm  pl-2 border-2 w-full border-sky-600 rounded-lg py-1'
+              }
+            />
+            {errors.email && touched.email && (
+              <p className="text-sm text-red-600 flex mr-2 justify-end">
+                {errors.email}
+              </p>
+            )}
+          </div>
         </div>
-        {errors.email && touched.email && <p>{errors.email}</p>}
+
         <div className="flex justify-between">
           <label>Password:</label>
-          <input
-            value={values.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            type="password"
-            id="password"
-            placeholder="your password"
-            className={
-              errors.password && touched.password
-                ? 'text-sm  pl-2 border-2 w-4/6 border-red-600 rounded-lg py-1'
-                : 'text-sm  pl-2 border-2 w-4/6 border-sky-600 rounded-lg py-1'
-            }
-          />
+
+          <div className="flex flex-col w-4/6">
+            <input
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              type="password"
+              id="password"
+              placeholder="your password"
+              className={
+                errors.password && touched.password
+                  ? 'text-sm  pl-2 border-2 w-full border-red-600 rounded-lg py-1'
+                  : 'text-sm  pl-2 border-2 w-full border-sky-600 rounded-lg py-1'
+              }
+            />
+            {errors.password && touched.password && (
+              <p className="text-sm text-red-600 flex mr-2 justify-end">
+                {errors.password}
+              </p>
+            )}
+          </div>
         </div>
-        {errors.password && touched.password && <p>{errors.password}</p>}
 
         <div className="flex justify-between">
           <label>Confirm Password:</label>
-          <input
-            value={values.confirmPassword}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            type="password"
-            id="confirmPassword"
-            placeholder="Confirm your password"
-            className={
-              errors.confirmPassword && touched.confirmPassword
-                ? 'text-sm  pl-2 border-2 w-4/6 border-red-600 rounded-lg py-1'
-                : 'text-sm  pl-2 border-2 w-4/6 border-sky-600 rounded-lg py-1'
-            }
-          />
+          <div className="flex flex-col w-4/6">
+            <input
+              value={values.confirmPassword}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              type="password"
+              id="confirmPassword"
+              placeholder="Confirm your password"
+              className={
+                errors.confirmPassword && touched.confirmPassword
+                  ? 'text-sm  pl-2 border-2 w-full border-red-600 rounded-lg py-1'
+                  : 'text-sm  pl-2 border-2 w-full border-sky-600 rounded-lg py-1'
+              }
+            />
+            {errors.confirmPassword && touched.confirmPassword && (
+              <p className="text-sm text-red-600 flex mr-2 justify-end">
+                {errors.confirmPassword}
+              </p>
+            )}
+          </div>
         </div>
-        {errors.confirmPassword && touched.confirmPassword && (
-          <p>{errors.confirmPassword}</p>
-        )}
 
         <div className="flex justify-between mt-6 w-4/5 mx-auto">
           <CustomLinkBtn

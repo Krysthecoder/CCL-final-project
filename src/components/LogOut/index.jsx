@@ -2,18 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { LogoutIcon } from '../../icons';
 
-function removeTkn() {
-  window.localStorage.removeItem('fetchedToken');
-}
-
 export default function LogoutBtn({ className }) {
+  const removeFetchedToken = () => {
+    localStorage.removeItem('fetchedToken');
+    localStorage.removeItem('userId');
+  };
+
   return (
     <Link to={'/'} className={className}>
-      <button
-        onClick={() => {
-          removeTkn();
-        }}
-      >
+      <button onClick={removeFetchedToken}>
         <LogoutIcon title="Logout" />
       </button>
     </Link>
