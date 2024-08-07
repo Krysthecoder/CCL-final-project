@@ -96,9 +96,9 @@ function LoginPage() {
     <div className="flex w-5/6 items-center justify-center mt-16 gap-8 mx-auto">
       <img src={img} alt="login-doctor-image?" className="w-1/3 rounded-xl" />
       <div>
-        <h1 className="text-5xl text-center">Welcome to Dentora!</h1>
+        <h1 className="text-5xl text-center">Welcome to Dentora</h1>
         <h3 className="text-lg text-center mt-6">
-          Please enter your credentials!
+          Please enter your credentials
         </h3>
         <form
           onSubmit={handleSubmit}
