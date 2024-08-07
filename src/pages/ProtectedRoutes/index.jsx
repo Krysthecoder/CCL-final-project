@@ -1,9 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
 const useAuth = () => {
-  const userLogonStatus = {
-    loggedIn: window.localStorage.getItem('fetchedToken')
-  };
+  const userLogonStatus = window.localStorage.getItem('fetchedToken');
+
   return userLogonStatus;
 };
 
