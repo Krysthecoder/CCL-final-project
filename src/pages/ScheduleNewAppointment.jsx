@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
 import Calendar from 'react-calendar';
+import { dateFixerFn } from '../customFunctions';
 import { GoBackIcon, ScheduleIcon } from '../icons';
 import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
 import { Form, Formik } from 'formik';
@@ -11,29 +12,48 @@ import { officeHours, utilsData } from '../utils/utilsData';
 import 'react-calendar/dist/Calendar.css';
 
 function ScheduleNewAppointment() {
-  // async function appointmentsGetter() {
-  //   const url = utilsData.apiURL + utilsData.apiGetCurrentAppointments;
-  //   const token = window.localStorage.getItem('fetchedToken');
-  //   await fetch(url, {
-  //     method: 'GET',
-  //     headers: {
-  //       'x-access-token': token
-  //     },
-  //     body: JSON.stringify({
-  //       // title: ,
-  //       // user: ,
-  //       // startTime: ,
-  //       // endTime: ,
-  //       // createdBy:
-  //     })
-  //   })
-  //     .then((response) =>
-  //       response.json().then((data) => {
-  //         //setCurrentAppts(data.appointments);
-  //       })
-  //     )
-  //     .catch((err) => console.log('error', err));
-  // }
+  const [value, onChange] = useState(new Date());
+
+  async function appointmentCreator(title, startTime, endTime) {
+    try {
+      const response = await fetch(
+        utilsData.apiURL + utilsData.apiCreatNewAppointment,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: title,
+            user: localStorage.getItem('userId'),
+            startTime: startTime,
+            endTime: endTime,
+            createdBy: localStorage.getItem('userId')
+          })
+        }
+      );
+
+      if (response.status === 400) {
+      } else if (response.status === 401) {
+      } else if (response.status === 404) {
+      } else {
+        const json = await response.json();
+        console.log(json);
+        console.log('success');
+      }
+    } catch (error) {
+      console.log('An error occurred:', error);
+    }
+  }
+
+  const onSubmit = (values, actions) => {
+    appointmentCreator(
+      values.title,
+      dateFixerFn(value, values.startTime),
+      dateFixerFn(value, values.endTime)
+    );
+    actions.resetForm();
+  };
 
   return (
     <div>
@@ -51,6 +71,7 @@ function ScheduleNewAppointment() {
               description: ''
             }}
             validationSchema={createAppoitmentSchema}
+            onSubmit={onSubmit}
           >
             {(props) => (
               <Form className="flex flex-col w-4/5 mx-auto gap-4 mt-6">
@@ -113,7 +134,7 @@ function ScheduleNewAppointment() {
             icon={<GoBackIcon />}
           />
 
-          <Calendar />
+          <Calendar onChange={onChange} value={value} />
         </div>
       </div>
     </div>
