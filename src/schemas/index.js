@@ -37,8 +37,21 @@ export const signupSchema = yup.object().shape({
 });
 
 export const createAppoitmentSchema = yup.object().shape({
-  title: yup.string().required("Title Required"),
-  startTime: yup.number().required("Start Time Required"),
-  endTime: yup.number().required("End-time is required!s"),
-  description: yup.string().required("Please enter a description!")
-})
+  title: yup
+    .string()
+    .min(6, 'too Short, please be more descriptive')
+    .max(28, 'too long, please be more concised')
+    .required('Title Required'),
+  startTime: yup.string().required('Start Time Required'),
+  endTime: yup
+    .string()
+    .required('End-time is required!s')
+    .notOneOf(
+      [yup.ref('startTime'), null],
+      'Appointment cant last less than one minute'
+    ),
+  description: yup
+    .string()
+    .min(25, 'Please be more describtive.')
+    .required('Please enter a description!')
+});
