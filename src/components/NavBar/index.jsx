@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { LogoutIcon } from '../../icons/index';
+import LogoutBtn from '../LogOut';
 
 const NavBar = () => {
   return (
@@ -9,14 +8,12 @@ const NavBar = () => {
         <div>
           <h1 className="text-5xl text-stone-300 font-semibold">Dentora</h1>
           <p className="text-xs font-semibold text-stone-800 pl-1">
-            Fixing the chimuelo.
+            Building Smiles Every Day!
           </p>
         </div>
         <ul>
-          <li>
-            <Link to="/" className=" text-stone-300">
-              <LogoutIcon title="Logout" />
-            </Link>
+          <li key="links to home page">
+            <LogoutBtn className={' text-stone-300'} />
           </li>
         </ul>
       </nav>
