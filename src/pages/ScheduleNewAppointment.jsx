@@ -79,13 +79,13 @@ function ScheduleNewAppointment() {
                   label="Title"
                   name="title"
                   type="text"
-                  placeHolder="Enter your title!"
+                  placeholder="Enter your title!"
                 />
 
                 <CustomSelect
                   label="Start Time"
                   name="startTime"
-                  placeHolder="Please select the start time"
+                  placeholder="Please select the start time"
                 >
                   <option value="">Please select the start time </option>
                   {officeHours.map((el) => {
@@ -96,7 +96,7 @@ function ScheduleNewAppointment() {
                 <CustomSelect
                   label="Start Time"
                   name="endTime"
-                  placeHolder="Please select the end time"
+                  placeholder="Please select the end time"
                 >
                   <option value="">Please select the start time </option>
                   {officeHours.map((el) => {
@@ -108,7 +108,7 @@ function ScheduleNewAppointment() {
                   label="Description"
                   name="description"
                   type="text"
-                  placeHolder="Enter a brief description"
+                  placeholder="Enter a brief description"
                 />
 
                 <button type="submit">
