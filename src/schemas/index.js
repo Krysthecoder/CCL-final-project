@@ -39,7 +39,8 @@ export const createAppoitmentSchema = yup.object().shape({
     .min(6, 'too Short, please be more descriptive')
     .max(28, 'too long, please be more concised')
     .required('Title Required'),
-  startTime: yup.string().required('Start Time Required'),
+  startTime: yup.string
+  ().required('Start Time Required'),
   endTime: yup
     .string()
     .required('End-time is required!s')
