@@ -14,6 +14,8 @@ import 'react-calendar/dist/Calendar.css';
 function ScheduleNewAppointment() {
   const [value, onChange] = useState(new Date());
 
+  const  token = localStorage.getItem("fetchedToken")
+
   async function appointmentCreator(title, startTime, endTime) {
     try {
       const response = await fetch(
@@ -21,7 +23,8 @@ function ScheduleNewAppointment() {
         {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-access-token': token
           },
           body: JSON.stringify({
             title: title,

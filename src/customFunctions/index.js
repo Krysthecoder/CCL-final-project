@@ -1,17 +1,17 @@
+
 export const dateFixerFn = (value, hour) => {
   const dateSelected = value.toString().split(' ');
-  const selectedDay = dateSelected[0];
-  const selectedDate = dateSelected[2];
-  const selectedMonth = dateSelected[1];
-  const selectedYear = dateSelected[3];
-  const selectedHour = hour;
-  const fixedDate = [
+  
+  const [ selectedDay, selectedMonth, selectedDate, selectedYear ] = dateSelected
+  
+  return [
     selectedDay,
     selectedDate,
     selectedMonth,
     selectedYear,
-    selectedHour,
+    hour,
     'GMT'
-  ];
-  return fixedDate.join(' ');
+  ].join(' ');
 };
+
+//toto change the  customFun name to helpers Dir
