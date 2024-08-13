@@ -89,7 +89,6 @@ function ScheduleNewAppointment() {
               initialValues={initialFormStatus}
               validationSchema={createAppoitmentSchema}
               onSubmit={function (values, actions) {
-                console.log(values);
                 appointmentCreator(values);
                 actions.resetForm();
               }}

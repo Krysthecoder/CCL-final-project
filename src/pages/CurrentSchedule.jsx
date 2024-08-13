@@ -47,38 +47,41 @@ function CurrentSchedule() {
           />
         </div>
         <table className="w-full mt-7 border-4 border-sky-100">
-          <tr
-            key="Appointment title"
-            className="text-left border-4 border-sky-100"
-          >
-            <th className="custom-tb-styles w-40">Title</th>
-            <th className="custom-tb-styles w-36">Start Time</th>
-            <th className="custom-tb-styles w-36">End Time</th>
-          </tr>
+          <tbody>
+            <tr
+              key="Appointment title"
+              className="text-left border-4 border-sky-100"
+            >
+              <th className="custom-tb-styles w-40">Title</th>
+              <th className="custom-tb-styles w-36">Start Time</th>
+              <th className="custom-tb-styles w-36">End Time</th>
+            </tr>
 
-          {currentAppts.length > 0 ? (
-            currentAppts.map((el) => {
-              return (
-                <tr key={el.id}>
-                  <td className="custom-tb-styles">{el.title}</td>
-                  <td className="">
-                    {format(el.startTime, {
-                      time: 'short',
-                      date: 'short'
-                    })}
-                  </td>
-                  <td className="custom-tb-styles">
-                    {format(el.endTime, {
-                      time: 'short',
-                      date: 'short'
-                    })}
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
-            <>Loading ...</>
-          )}
+            {currentAppts.length > 0 ? (
+              currentAppts.map((el) => {
+                console.log(el);
+                return (
+                  <tr key={el.id}>
+                    <td className="custom-tb-styles">{el.title}</td>
+                    <td className="custom-tb-styles" key={el.id}>
+                      {format(el.startTime, {
+                        time: 'short',
+                        date: 'short'
+                      })}
+                    </td>
+                    <td className="custom-tb-styles" key={el.id}>
+                      {format(el.endTime, {
+                        time: 'short',
+                        date: 'short'
+                      })}
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <>Loading ...</>
+            )}
+          </tbody>
         </table>
       </div>
     </div>
