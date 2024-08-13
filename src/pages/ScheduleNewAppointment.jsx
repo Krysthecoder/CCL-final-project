@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
 import Calendar from 'react-calendar';
-import { dateFixerFn } from '../helpers';
 import { GoBackIcon, ScheduleIcon } from '../icons';
-import {
-  CustomBtnInnerContent,
-  CustomLinkBtn,
-  CustomSbtBtn
-} from '../components/CustomBtns';
-import { Form, Formik, useFormik } from 'formik';
-import { CustomInput, CustomAreaInput } from '../components/CustomInput';
+import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
+import { Form, Formik } from 'formik';
+import { CustomInput } from '../components/CustomInput';
 import { createAppoitmentSchema } from '../schemas';
-import { officeHours, utilsData } from '../utils/utilsData';
+import { utilsData } from '../utils/utilsData';
 import 'react-calendar/dist/Calendar.css';
 
 import Typography from '@mui/material/Typography';
@@ -28,9 +23,8 @@ function ScheduleNewAppointment() {
 
   const token = localStorage.getItem('fetchedToken');
 
-  async function appointmentCreator(title, startTime, endTime) {
+  async function appointmentCreator({ title, startTime, endTime }) {
     try {
-      console.log('submitting');
       const response = await fetch(
         utilsData.apiURL + utilsData.apiCreatNewAppointment,
         {
@@ -40,10 +34,10 @@ function ScheduleNewAppointment() {
             'x-access-token': token
           },
           body: JSON.stringify({
-            title: title,
+            title,
             user: localStorage.getItem('userId'),
-            startTime: startTime,
-            endTime: endTime,
+            startTime,
+            endTime,
             createdBy: localStorage.getItem('userId')
           })
         }
@@ -51,28 +45,35 @@ function ScheduleNewAppointment() {
 
       if (response.status === 400) {
         console.log('error', response.error);
-      } else if (response.status === 401) {
-        console.log('error');
-      } else if (response.status === 404) {
-        console.log('error');
-      } else {
-        const json = await response.json();
-        console.log(json);
-        console.log('success');
+        return;
       }
+
+      if (response.status === 401) {
+        console.log('error');
+        return;
+      }
+
+      if (response.status === 404) {
+        console.log('error');
+        return;
+      }
+
+      const json = await response.json();
+      console.log(json);
+      console.log('success');
     } catch (error) {
       console.log('An error occurred:', error);
     }
   }
 
-  const initialFormStatus = {
-    title: 'Alvison MTB',
-    startTime: 'Mon, Aug 12 2024 02:10:00 GMT',
-    endTime: 'Mon, Aug 12 2024 03:05:00 GMT',
-    description: 'Fixing the muela, :V'
-  };
-
   const getCurrentTime = () => dayjs().format('YYYY-MM-DDTHH:mm');
+
+  const initialFormStatus = {
+    title: '',
+    startTime: dayjs(getCurrentTime()),
+    endTime: dayjs(getCurrentTime()),
+    description: ''
+  };
 
   return (
     <div>
@@ -87,7 +88,7 @@ function ScheduleNewAppointment() {
             <Formik
               initialValues={initialFormStatus}
               validationSchema={createAppoitmentSchema}
-              onSubmit={(values, actions) => {
+              onSubmit={function (values, actions) {
                 console.log(values);
                 appointmentCreator(values);
                 actions.resetForm();
@@ -124,7 +125,7 @@ function ScheduleNewAppointment() {
                         value={dayjs(props.values.startTime)}
                         onChange={(newValue) => {
                           props.values.startTime = dayjs(newValue.$d).format(
-                            'ddd, MMM DD YYYY hh:mm:ss'
+                            'ddd, DD MMM YYYY hh:mm:ss'
                           );
                         }}
                         defaultValue={dayjs(getCurrentTime())}
@@ -168,7 +169,15 @@ function ScheduleNewAppointment() {
                     rows={4}
                   />
 
-                  <button type="submit">Hola</button>
+                  <button
+                    type="submit"
+                    className="custom-btn-styles items-center justify-center w-6/12 mx-auto mt-4"
+                  >
+                    <CustomBtnInnerContent
+                      text="Submit"
+                      icon={<ScheduleIcon />}
+                    />
+                  </button>
                 </Form>
               )}
             </Formik>
