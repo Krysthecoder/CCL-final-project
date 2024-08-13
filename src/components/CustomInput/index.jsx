@@ -2,7 +2,6 @@ import React from 'react';
 import { useField } from 'formik';
 
 import TextField from '@mui/material/TextField';
-import { FormHelperText } from '@mui/material';
 
 export const CustomInput = ({ name, label, multiline, rows, ...props }) => {
   // console.log(props, 'este es un texto');
@@ -10,22 +9,13 @@ export const CustomInput = ({ name, label, multiline, rows, ...props }) => {
 
   const [field, meta] = useField(name);
 
-  // const configTextfield = {
   //   id: 'outlined-basic',
-  //   ...field,
-  //   ...props,
   //   sx: {
   //     '&  .MuiOutlinedInput-root': {
   //       width: '500px'
   //     }
   //   },
   //   variant: 'outlined'
-  // };
-
-  // if (meta && meta.touched && meta.error) {
-  //   configTextfield.error = true;
-  //   configTextfield.helperText = meta.error;
-  // }
 
   return (
     <TextField

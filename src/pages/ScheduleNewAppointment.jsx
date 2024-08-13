@@ -11,12 +11,17 @@ import {
 import { Form, Formik, useFormik } from 'formik';
 import { CustomInput, CustomAreaInput } from '../components/CustomInput';
 import { createAppoitmentSchema } from '../schemas';
-import { CustomSelect } from '../components/CustomSelect';
 import { officeHours, utilsData } from '../utils/utilsData';
 import 'react-calendar/dist/Calendar.css';
 
 import Typography from '@mui/material/Typography';
-import { TextField } from '@mui/material';
+
+import dayjs from 'dayjs';
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
+
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers';
 
 function ScheduleNewAppointment() {
   const [value, onChange] = useState(new Date());
@@ -25,6 +30,7 @@ function ScheduleNewAppointment() {
 
   async function appointmentCreator(title, startTime, endTime) {
     try {
+      console.log('submitting');
       const response = await fetch(
         utilsData.apiURL + utilsData.apiCreatNewAppointment,
         {
@@ -44,8 +50,11 @@ function ScheduleNewAppointment() {
       );
 
       if (response.status === 400) {
+        console.log('error', response.error);
       } else if (response.status === 401) {
+        console.log('error');
       } else if (response.status === 404) {
+        console.log('error');
       } else {
         const json = await response.json();
         console.log(json);
@@ -56,24 +65,14 @@ function ScheduleNewAppointment() {
     }
   }
 
-  // const onSubmit = (values, actions) => {
-  //   console.log('test');
-  //   console.log(values);
-  //   // appointmentCreator(
-  //   //   values.title,
-  //   //   dateFixerFn(value, values.startTime),
-  //   //   dateFixerFn(value, values.endTime)
-  //   // );
-  //   //console.log(values.title);
-  //   //actions.resetForm();
-  // };
+  const initialFormStatus = {
+    title: 'Alvison MTB',
+    startTime: 'Mon, Aug 12 2024 02:10:00 GMT',
+    endTime: 'Mon, Aug 12 2024 03:05:00 GMT',
+    description: 'Fixing the muela, :V'
+  };
 
-  // const initialFormStatus = {
-  //   title: '',
-  //   // startTime: '',
-  //   // endTime: '',
-  //   description: ''
-  // };
+  const getCurrentTime = () => dayjs().format('YYYY-MM-DDTHH:mm');
 
   return (
     <div>
@@ -84,49 +83,14 @@ function ScheduleNewAppointment() {
             <Typography variant="h6">
               Please select from the below options:
             </Typography>
-            {/* <form
-              onSubmit={handleSubmit}
-              autoComplete="off"
-              className="flex flex-col mx-auto gap-4 mt-4"
-            >
-              <TextField
-                id="outlined-basic"
-                sx={{
-                  '&  .MuiOutlinedInput-root': {
-                    width: '500px'
-                  }
-                }}
-                value={values.title}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.title && Boolean(errors.title)}
-                helperText={touched.title && errors.title}
-                variant="outlined"
-                label="Enter a title"
-              />
-
-              <TextField
-                id="outlined-basic"
-                sx={{
-                  '&  .MuiOutlinedInput-root': {
-                    width: '500px'
-                  }
-                }}
-                value={values.description}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.description && Boolean(errors.description)}
-                helperText={touched.description && errors.description}
-                variant="outlined"
-                label="Enter a description"
-              />
-            </form> */}
 
             <Formik
-              initialValues={{ title: '' }}
+              initialValues={initialFormStatus}
               validationSchema={createAppoitmentSchema}
               onSubmit={(values, actions) => {
                 console.log(values);
+                appointmentCreator(values);
+                actions.resetForm();
               }}
             >
               {(props) => (
@@ -143,33 +107,68 @@ function ScheduleNewAppointment() {
                     onBlur={props.handleBlur}
                     value={props.values.title}
                   />
-                  <CustomSelect
-                    label="Please select the start time"
-                    name="startTime"
-                  />
-                  <CustomSelect
-                    label="Please select the end time"
-                    name="endTime"
+
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoItem label="Enter your Start Time:">
+                      <TimePicker
+                        className="text-sm  pl-2 border-2 w-full  border-sky-600 rounded-lg py-1"
+                        sx={{
+                          '& .MuiFormControl-root': {
+                            border: '0px solid transparent'
+                          },
+                          '& .MuiInputBase-root': {
+                            width: '500px',
+                            color: '#717171'
+                          }
+                        }}
+                        value={dayjs(props.values.startTime)}
+                        onChange={(newValue) => {
+                          props.values.startTime = dayjs(newValue.$d).format(
+                            'ddd, MMM DD YYYY hh:mm:ss'
+                          );
+                        }}
+                        defaultValue={dayjs(getCurrentTime())}
+                      />
+                    </DemoItem>
+                  </LocalizationProvider>
+
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoItem label="Enter your End Time:">
+                      <TimePicker
+                        className="text-sm  pl-2 border-2 w-full  border-sky-600 rounded-lg py-1"
+                        sx={{
+                          '& .MuiFormControl-root': {
+                            border: '0px solid transparent'
+                          },
+                          '& .MuiInputBase-root': {
+                            width: '500px',
+                            color: '#717171'
+                          }
+                        }}
+                        value={dayjs(props.values.endTime)}
+                        onChange={(newValue) => {
+                          props.values.endTime = dayjs(newValue.$d).format(
+                            'ddd, MMM DD YYYY hh:mm:ss A'
+                          );
+                        }}
+                        defaultValue={dayjs(getCurrentTime())}
+                      />
+                    </DemoItem>
+                  </LocalizationProvider>
+
+                  <CustomInput
+                    id="description"
+                    name="description"
+                    label="Enter your description!"
+                    type="text"
+                    onChange={props.handleChange}
+                    onBlur={props.handleBlur}
+                    value={props.values.description}
+                    multiline
+                    rows={4}
                   />
 
-                  {/* <CustomInput
-                  label="Description"
-                  name="description"
-                  type="text"
-                  placeholder="Enter a brief description"
-                  multiline
-                  rows={4}
-                /> */}
-                  {props.errors.title && (
-                    <div id="feedback">{props.errors.title}</div>
-                  )}
                   <button type="submit">Hola</button>
-                  {/* <CustomSbtBtn
-                  text="hola"
-                  icon={<ScheduleIcon />}
-                  className="w-6/12 mx-auto mt-4"
-                  type="submit"
-                /> */}
                 </Form>
               )}
             </Formik>
