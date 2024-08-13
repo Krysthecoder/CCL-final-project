@@ -36,11 +36,10 @@ export const signupSchema = yup.object().shape({
 export const createAppoitmentSchema = yup.object().shape({
   title: yup
     .string()
-    .min(6, 'too Short, please be more descriptive')
-    .max(28, 'too long, please be more concised')
+    .min(5, 'too Short, please be more descriptive')
+    .max(15, 'too long, please be more concised')
     .required('Title Required'),
-  startTime: yup.string
-  ().required('Start Time Required'),
+  startTime: yup.string().required('Start Time Required'),
   endTime: yup
     .string()
     .required('End-time is required!s')
@@ -50,6 +49,6 @@ export const createAppoitmentSchema = yup.object().shape({
     ),
   description: yup
     .string()
-    .min(25, 'Please be more describtive.')
+    .min(5, 'Please be more describtive.')
     .required('Please enter a description!')
 });

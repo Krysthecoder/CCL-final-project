@@ -1,58 +1,42 @@
 import React from 'react';
 import { useField } from 'formik';
 
-export const CustomInput = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
+import TextField from '@mui/material/TextField';
+import { FormHelperText } from '@mui/material';
+
+export const CustomInput = ({ name, label, multiline, rows, ...props }) => {
+  // console.log(props, 'este es un texto');
+  // console.log(props.value, 'este es un valor');
+
+  const [field, meta] = useField(name);
+
+  // const configTextfield = {
+  //   id: 'outlined-basic',
+  //   ...field,
+  //   ...props,
+  //   sx: {
+  //     '&  .MuiOutlinedInput-root': {
+  //       width: '500px'
+  //     }
+  //   },
+  //   variant: 'outlined'
+  // };
+
+  // if (meta && meta.touched && meta.error) {
+  //   configTextfield.error = true;
+  //   configTextfield.helperText = meta.error;
+  // }
 
   return (
-    <>
-      <div className="flex justify-between">
-        <label>{label}</label>
-        <div className="flex flex-col w-4/6">
-          <input
-            {...field}
-            {...props}
-            className={
-              meta.touched && meta.error
-                ? 'text-sm  pl-2 border-2 w-full border-red-600 rounded-lg py-1'
-                : 'text-sm  pl-2 border-2 w-full border-sky-600 rounded-lg py-1'
-            }
-          />
-          {meta.touched && meta.error && (
-            <p className="flex justify-end text-sm mr-2 text-red-700 ">
-              {meta.error}
-            </p>
-          )}
-        </div>
-      </div>
-    </>
-  );
-};
-
-export const CustomAreaInput = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
-
-  return (
-    <>
-      <div className="flex justify-between">
-        <label>{label}</label>
-        <div className="flex flex-col w-4/6">
-          <textarea
-            {...field}
-            {...props}
-            className={
-              meta.touched && meta.error
-                ? 'text-sm  pl-2 border-2 w-full h-20 border-red-600 rounded-lg py-1'
-                : 'text-sm  pl-2 border-2 w-full h-24 border-sky-600 rounded-lg py-1'
-            }
-          />
-          {meta.touched && meta.error && (
-            <p className="flex justify-end text-sm mr-2 text-red-700 ">
-              {meta.error}
-            </p>
-          )}
-        </div>
-      </div>
-    </>
+    <TextField
+      {...field}
+      {...props}
+      label={label}
+      multiline={multiline}
+      rows={multiline ? rows : 1}
+      error={meta.touched && Boolean(meta.error)}
+      helperText={meta.touched && meta.error}
+      fullWidth
+    />
   );
 };
