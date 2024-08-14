@@ -8,12 +8,9 @@ import { CustomInput } from '../components/CustomInput';
 import { createAppoitmentSchema } from '../schemas';
 import { utilsData } from '../utils/utilsData';
 import 'react-calendar/dist/Calendar.css';
-
 import Typography from '@mui/material/Typography';
-
 import dayjs from 'dayjs';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
-
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers';
