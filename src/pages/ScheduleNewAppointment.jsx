@@ -23,7 +23,12 @@ function ScheduleNewAppointment() {
 
   const token = localStorage.getItem('fetchedToken');
 
-  async function appointmentCreator({ title, startTime, endTime }) {
+  async function appointmentCreator({
+    title,
+    startTime,
+    endTime,
+    description
+  }) {
     try {
       const response = await fetch(
         utilsData.apiURL + utilsData.apiCreatNewAppointment,
@@ -38,6 +43,7 @@ function ScheduleNewAppointment() {
             user: localStorage.getItem('userId'),
             startTime,
             endTime,
+            description,
             createdBy: localStorage.getItem('userId')
           })
         }
