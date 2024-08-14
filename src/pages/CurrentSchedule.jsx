@@ -4,6 +4,7 @@ import NavBar from '../components/NavBar/index';
 import { utilsData } from '../utils/utilsData';
 import { format } from '@formkit/tempo';
 import { CustomLinkBtn } from '../components/CustomBtns';
+import AppointmentsTable from '../components/AppointmentsTable/Index';
 
 function CurrentSchedule() {
   const [currentAppts, setCurrentAppts] = useState([]);
@@ -20,6 +21,7 @@ function CurrentSchedule() {
       .then((response) =>
         response.json().then((data) => {
           setCurrentAppts(data.appointments);
+          console.log(data);
         })
       )
       .catch((err) => console.log('error', err));
@@ -46,43 +48,7 @@ function CurrentSchedule() {
             icon={<CalendarIcon />}
           />
         </div>
-        <table className="w-full mt-7 border-4 border-sky-100">
-          <tbody>
-            <tr
-              key="Appointment title"
-              className="text-left border-4 border-sky-100"
-            >
-              <th className="custom-tb-styles w-40">Title</th>
-              <th className="custom-tb-styles w-36">Start Time</th>
-              <th className="custom-tb-styles w-36">End Time</th>
-            </tr>
-
-            {currentAppts.length > 0 ? (
-              currentAppts.map((el) => {
-                console.log(el);
-                return (
-                  <tr key={el.id}>
-                    <td className="custom-tb-styles">{el.title}</td>
-                    <td className="custom-tb-styles" key={el.id}>
-                      {format(el.startTime, {
-                        time: 'short',
-                        date: 'short'
-                      })}
-                    </td>
-                    <td className="custom-tb-styles" key={el.id}>
-                      {format(el.endTime, {
-                        time: 'short',
-                        date: 'short'
-                      })}
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <>Loading ...</>
-            )}
-          </tbody>
-        </table>
+        <AppointmentsTable rowData={currentAppts} />
       </div>
     </div>
   );
