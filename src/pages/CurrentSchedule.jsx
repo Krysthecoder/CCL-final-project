@@ -20,8 +20,8 @@ function CurrentSchedule() {
     })
       .then((response) =>
         response.json().then((data) => {
-          setCurrentAppts(data.appointments);
           console.log(data);
+          setCurrentAppts(data.appointments);
         })
       )
       .catch((err) => console.log('error', err));

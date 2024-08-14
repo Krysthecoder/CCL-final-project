@@ -12,7 +12,7 @@ import { TableFooter } from '@mui/material';
 const timeExtractor = (dateString) => {
   const timeMatch = dateString.match(/T(\d{2}:\d{2}:\d{2})/);
   if (timeMatch) {
-    console.log('timeMatch', timeMatch[1]);
+    //console.log('timeMatch', timeMatch[1]);
     return timeMatch[1];
   } else {
     return null;
@@ -20,7 +20,7 @@ const timeExtractor = (dateString) => {
 };
 
 export default function AppointmentsTable({ rowData }) {
-  console.log('rowData', rowData);
+  //console.log('rowData', rowData);
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -78,7 +78,7 @@ export default function AppointmentsTable({ rowData }) {
                   {timeExtractor(row.endTime)}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {row.createdBy}
+                  {row?.user?.email ?? '--'}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {row.description || '--'}
@@ -86,7 +86,9 @@ export default function AppointmentsTable({ rowData }) {
               </StyledTableRow>
             ))}
           </TableBody>
-          <TableFooter>Testing</TableFooter>
+          <TableFooter>
+            <p>test</p>
+          </TableFooter>
         </Table>
       </TableContainer>
     </Paper>
