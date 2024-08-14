@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { CalendarIcon } from '../icons';
 import NavBar from '../components/NavBar/index';
 import { utilsData } from '../utils/utilsData';
-import { format } from '@formkit/tempo';
 import { CustomLinkBtn } from '../components/CustomBtns';
 import AppointmentsTable from '../components/AppointmentsTable/Index';
 

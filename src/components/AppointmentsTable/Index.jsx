@@ -12,7 +12,6 @@ import { TableFooter } from '@mui/material';
 const timeExtractor = (dateString) => {
   const timeMatch = dateString.match(/T(\d{2}:\d{2}:\d{2})/);
   if (timeMatch) {
-    //console.log('timeMatch', timeMatch[1]);
     return timeMatch[1];
   } else {
     return null;
@@ -20,8 +19,6 @@ const timeExtractor = (dateString) => {
 };
 
 export default function AppointmentsTable({ rowData }) {
-  //console.log('rowData', rowData);
-
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: '#0284c7',
@@ -43,7 +40,7 @@ export default function AppointmentsTable({ rowData }) {
   }));
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+    <Paper sx={{ width: '100%', overflow: 'hidden' }} className="mt-4">
       <TableContainer component={Paper}>
         <Table
           stickyHeader
