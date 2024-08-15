@@ -19,7 +19,6 @@ function CurrentSchedule() {
     })
       .then((response) =>
         response.json().then((data) => {
-          console.log(data);
           setCurrentAppts(data.appointments);
         })
       )

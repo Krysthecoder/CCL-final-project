@@ -19,7 +19,6 @@ function LoginPage() {
   const [isLoggedIn, setIsLoggedIn] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
-
   const [submittingForm, setSubmittingForm] = useState(false);
 
   const loginMethod = async ({ email, password }) => {
@@ -33,15 +32,15 @@ function LoginPage() {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            email: email,
-            password: password
+            email,
+            password
           })
         }
       );
 
       if (response.status === 400) {
         setErrorMsg('Bad Request, please try again later!');
-        //setSigningStatus('failedStatus');
+        setSigningStatus('failedStatus');
         setIsLoggedIn('unauthorized');
         btnResetter();
         console.log('error');
@@ -79,6 +78,7 @@ function LoginPage() {
   const btnResetter = () => {
     setTimeout(() => {
       setSigningStatus('initialStatus');
+      setSubmittingForm(false);
     }, 1500);
   };
 
