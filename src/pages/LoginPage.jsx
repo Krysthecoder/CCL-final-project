@@ -91,8 +91,8 @@ function LoginPage() {
   };
 
   const initialFormStatus = {
-    email: 'krysthopher3s@gmail.com',
-    password: 'Password2341@'
+    email: '',
+    password: ''
   };
 
   return (
