@@ -4,7 +4,7 @@ import { Form, Formik } from 'formik';
 import { utilsData } from '../utils/utilsData';
 import { useNavigate } from 'react-router-dom';
 import {
-  CircledRightArrow,
+  CircledUptArrow,
   LoginIcon,
   UserDeniedIcon,
   WelcomeIcon
@@ -96,10 +96,22 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex w-5/6 items-center justify-center mt-16 gap-14 mx-auto">
-      <img src={img} alt="login-doctor-image?" className="w-1/3 rounded-xl" />
+    <div
+      className="
+    flex flex-col w-11/12
+    xl:w-5/6 xl:flex-row
+    items-center justify-center mt-16 gap-14 mx-auto"
+    >
+      <img
+        src={img}
+        alt="login-doctor-image?"
+        className="
+          w-5/12 rounded-2xl
+          md:w-4/12
+          xl:w-1/3 xl:rounded-xl"
+      />
       <div>
-        <h1 className="text-5xl text-center">Welcome to Dentora</h1>
+        <h1 className="text-3xl md:text-5xl text-center">Welcome to Dentora</h1>
         <h3 className="text-lg text-center mt-6">
           Please enter your credentials
         </h3>
@@ -149,7 +161,7 @@ function LoginPage() {
                   path={'/SignUp'}
                   className={'custom-btn-styles'}
                   text="Sign-up"
-                  icon={<CircledRightArrow />}
+                  icon={<CircledUptArrow />}
                 />
 
                 {isLoggedIn !== 'authorized' ? (
