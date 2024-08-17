@@ -52,6 +52,7 @@ export default function SignUp() {
   const statusReset = () => {
     setTimeout(() => {
       setSignupStatus('initialStatus');
+      setSubmittingForm(false);
     }, 1500);
   };
 
@@ -71,36 +72,24 @@ export default function SignUp() {
     confirmPassword: ''
   };
 
-  // const onSubmit = (values, actions) => {
-  //   createUser(values.email, values.password);
-  //   actions.resetForm();
-  // };
-
-  // const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
-  //   useFormik({
-  //     initialValues: {
-  //       email: '',
-  //       password: '',
-  //       confirmPassword: ''
-  //     },
-  //     validationSchema: signupSchema,
-  //     onSubmit
-  //   });
-
   return (
-    <div className="w-3/5 mt-32 flex justify-center items-center flex-col mx-auto">
-      <h1 className="text-5xl text-sky-700 font-bold">Welcome to Dentora</h1>
-      <h3 className="text-2xl mt-6">Please register a new user</h3>
+    <div className="w-11/12 md:w-8/12 mt-32 flex justify-center items-center flex-col mx-auto">
+      <h1 className=" text-4xl md:text-5xl text-sky-700 font-bold">
+        Welcome to Dentora
+      </h1>
+      <h3 className="text-lg md:text-2xl mt-6 ">Please register a new user</h3>
 
       <Formik
         initialValues={initialFormStatus}
         validationSchema={signupSchema}
         onSubmit={function (values, actions) {
+          setSubmittingForm(true);
           console.log(values);
+          actions.resetForm();
         }}
       >
         {(props, isSubmitting = submittingForm) => (
-          <Form>
+          <Form className="flex flex-col w-10/12 gap-4 mt-6 md:mt-8 lg:w-8/12">
             <CustomInput
               id="firstName"
               name="firstName"
@@ -151,140 +140,53 @@ export default function SignUp() {
               value={props.values.confirmPassword}
               disabled={isSubmitting}
             />
+
+            <div className="flex justify-between mt-6">
+              <CustomLinkBtn
+                path={'/'}
+                className={
+                  'custom-btn-styles w-5/12 md:w-auto lg:w-5/12 lg:py-4'
+                }
+                text="Go-Back"
+                icon={<HomeIcon />}
+              />
+
+              <button
+                type="submit"
+                className="custom-btn-styles w-5/12 md:w-auto lg:w-6/12 lg:py-4"
+              >
+                {signupStatus === 'initialStatus' ? (
+                  <CustomBtnInnerContent
+                    text="Sign-Up"
+                    icon={<RegisterIcon />}
+                  />
+                ) : null}
+
+                {signupStatus === 'loadingStatus' ? (
+                  <CustomBtnInnerContent
+                    text="Loading"
+                    icon={
+                      <CircularProgress
+                        size={20}
+                        sx={{
+                          color: 'white'
+                        }}
+                      />
+                    }
+                  />
+                ) : null}
+
+                {signupStatus === 'failedStatus' ? (
+                  <CustomBtnInnerContent
+                    text="Failed"
+                    icon={<UserDeniedIcon />}
+                  />
+                ) : null}
+              </button>
+            </div>
           </Form>
         )}
       </Formik>
     </div>
   );
 }
-
-// {/* <form
-//         onSubmit={handleSubmit}
-//         autoComplete="off"
-//         className="flex flex-col w-4/6 mx-auto gap-4 mt-6"
-//       >
-//         <div className="flex justify-between mt">
-//           <label>Email:</label>
-//           <div className="flex flex-col w-4/6">
-//             <input
-//               type="email"
-//               id="email"
-//               value={values.email}
-//               onChange={handleChange}
-//               onBlur={handleBlur}
-//               placeholder="youremail@email.com"
-//               className={
-//                 errors.email && touched.email
-//                   ? 'text-sm  pl-2 border-2 w-full border-red-600 rounded-lg py-1'
-//                   : 'text-sm  pl-2 border-2 w-full border-sky-600 rounded-lg py-1'
-//               }
-//             />
-//             {errors.email && touched.email && (
-//               <p className="text-sm text-red-600 flex mr-2 justify-end">
-//                 {errors.email}
-//               </p>
-//             )}
-//           </div>
-//         </div>
-
-//         <div className="flex justify-between">
-//           <label>Password:</label>
-
-//           <div className="flex flex-col w-4/6">
-//             <input
-//               value={values.password}
-//               onChange={handleChange}
-//               onBlur={handleBlur}
-//               type="password"
-//               id="password"
-//               placeholder="your password"
-//               className={
-//                 errors.password && touched.password
-//                   ? 'text-sm  pl-2 border-2 w-full border-red-600 rounded-lg py-1'
-//                   : 'text-sm  pl-2 border-2 w-full border-sky-600 rounded-lg py-1'
-//               }
-//             />
-//             {errors.password && touched.password && (
-//               <p className="text-sm text-red-600 flex mr-2 justify-end">
-//                 {errors.password}
-//               </p>
-//             )}
-//           </div>
-//         </div>
-
-//         <div className="flex justify-between">
-//           <label>Confirm Password:</label>
-//           <div className="flex flex-col w-4/6">
-//             <input
-//               value={values.confirmPassword}
-//               onChange={handleChange}
-//               onBlur={handleBlur}
-//               type="password"
-//               id="confirmPassword"
-//               placeholder="Confirm your password"
-//               className={
-//                 errors.confirmPassword && touched.confirmPassword
-//                   ? 'text-sm  pl-2 border-2 w-full border-red-600 rounded-lg py-1'
-//                   : 'text-sm  pl-2 border-2 w-full border-sky-600 rounded-lg py-1'
-//               }
-//             />
-//             {errors.confirmPassword && touched.confirmPassword && (
-//               <p className="text-sm text-red-600 flex mr-2 justify-end">
-//                 {errors.confirmPassword}
-//               </p>
-//             )}
-//           </div>
-//         </div>
-
-//         <div className="flex justify-between mt-6 w-4/5 mx-auto">
-//           <CustomLinkBtn
-//             path={'/'}
-//             className={'custom-btn-styles'}
-//             text="Go-Back"
-//             icon={<HomeIcon />}
-//           />
-
-//           <button type="submit">
-//             <span
-//               className={
-//                 signupStatus === 'initialStatus'
-//                   ? 'custom-btn-styles'
-//                   : 'hidden'
-//               }
-//             >
-//               <CustomBtnInnerContent text="Sign-Up" icon={<RegisterIcon />} />
-//             </span>
-
-//             <span
-//               className={
-//                 signupStatus === 'loadingStatus'
-//                   ? 'custom-btn-styles'
-//                   : 'hidden'
-//               }
-//             >
-//               <CustomBtnInnerContent
-//                 text={'Loading'}
-//                 icon={
-//                   <CircularProgress
-//                     size={20}
-//                     sx={{
-//                       color: 'white'
-//                     }}
-//                   />
-//                 }
-//               />
-//             </span>
-
-//             <span
-//               className={
-//                 signupStatus === 'failedStatus' ? 'custom-btn-styles' : 'hidden'
-//               }
-//             >
-//               <CustomBtnInnerContent
-//                 text={'Failed'}
-//                 icon={<UserDeniedIcon />}
-//               />
-//             </span>
-//           </button>
-//         </div>
-// </form> */}
