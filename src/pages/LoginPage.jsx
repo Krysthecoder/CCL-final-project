@@ -42,19 +42,19 @@ function LoginPage() {
         setErrorMsg('Bad Request, please try again later!');
         setSigningStatus('failedStatus');
         setIsLoggedIn('unauthorized');
-        btnResetter();
+        statusReset();
         console.log('error');
       } else if (response.status === 401) {
         setErrorMsg('Bad Credentials, please try again!');
         setSigningStatus('failedStatus');
         setIsLoggedIn('unauthorized');
-        btnResetter();
+        statusReset();
         console.log('error');
       } else if (response.status === 404) {
         setErrorMsg('Bad Credentials, please try again!');
         setSigningStatus('failedStatus');
         setIsLoggedIn('unauthorized');
-        btnResetter();
+        statusReset();
         console.log('error');
       } else {
         const json = await response.json();
@@ -75,7 +75,7 @@ function LoginPage() {
     }
   };
 
-  const btnResetter = () => {
+  const statusReset = () => {
     setTimeout(() => {
       setSigningStatus('initialStatus');
       setSubmittingForm(false);
