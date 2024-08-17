@@ -39,9 +39,12 @@ export default function SignUp() {
         statusReset();
       } else {
         const json = await response.json();
-        window.localStorage.setItem('fetchedToken', json.token);
-        console.log('success');
-
+        if (json.token.length > 0) {
+          window.localStorage.setItem('fetchedToken', json.token);
+        }
+        if (json.user._id.length > 0) {
+          localStorage.setItem('userId', json.user._id);
+        }
         pageRedirecter();
       }
     } catch (error) {
