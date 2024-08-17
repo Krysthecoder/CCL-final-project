@@ -73,7 +73,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="w-11/12 md:w-8/12 mt-32 flex justify-center items-center flex-col mx-auto">
+    <div className="w-11/12 md:w-8/12 mt-10 md:mt-32 flex justify-center items-center flex-col mx-auto">
       <h1 className=" text-4xl md:text-5xl text-sky-700 font-bold">
         Welcome to Dentora
       </h1>
@@ -84,7 +84,7 @@ export default function SignUp() {
         validationSchema={signupSchema}
         onSubmit={function (values, actions) {
           setSubmittingForm(true);
-          console.log(values);
+          createUser(values);
           actions.resetForm();
         }}
       >
