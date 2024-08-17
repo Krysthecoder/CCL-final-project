@@ -58,6 +58,9 @@ function LoginPage() {
         console.log('error');
       } else {
         const json = await response.json();
+        if (json.user) {
+          window.localStorage.setItem('userName', json.user.firstName);
+        }
         if (json.token.length > 0) {
           window.localStorage.setItem('fetchedToken', json.token);
           setSigningStatus('succesStatus');
@@ -91,8 +94,8 @@ function LoginPage() {
   };
 
   const initialFormStatus = {
-    email: '',
-    password: ''
+    email: 'krysthopher5@gmail.com',
+    password: 'Password2341@'
   };
 
   return (
