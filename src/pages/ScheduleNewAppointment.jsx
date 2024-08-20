@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { startTransition, useState } from 'react';
 import NavBar from '../components/NavBar';
 import Calendar from 'react-calendar';
 import { GoBackIcon, ScheduleIcon } from '../icons';
@@ -10,22 +10,27 @@ import { utilsData } from '../utils/utilsData';
 import 'react-calendar/dist/Calendar.css';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
-import { DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DemoItem, DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 function ScheduleNewAppointment() {
-  const [value, onChange] = useState(new Date());
+  dayjs.extend(customParseFormat);
 
   const token = localStorage.getItem('fetchedToken');
 
   async function appointmentCreator({
     title,
+    date,
     startTime,
     endTime,
     description
   }) {
+    startTime = date + ' ' + startTime + ' GMT';
+    endTime = date + ' ' + endTime + ' GMT';
     try {
       const response = await fetch(
         utilsData.apiURL + utilsData.apiCreatNewAppointment,
@@ -73,6 +78,7 @@ function ScheduleNewAppointment() {
 
   const initialFormStatus = {
     title: '',
+    date: '',
     startTime: dayjs(getCurrentTime()),
     endTime: dayjs(getCurrentTime()),
     description: ''
@@ -82,121 +88,141 @@ function ScheduleNewAppointment() {
     <div>
       <NavBar />
       <div className="container mx-auto">
-        <div className="flex justify-between gap-10 mt-20">
-          <div className="basis-1/2 flex flex-col justify-center items-center">
-            <Typography variant="h6">
-              Please select from the below options:
-            </Typography>
+        <div className="flex flex-col justify-center items-center mt-8 mx-auto lg:mt-20 lg:w-6/12">
+          <Typography variant="h6">
+            Please select from the below options:
+          </Typography>
 
-            <Formik
-              initialValues={initialFormStatus}
-              validationSchema={createAppoitmentSchema}
-              onSubmit={function (values, actions) {
-                appointmentCreator(values);
-                actions.resetForm();
-              }}
-            >
-              {(props) => (
-                <Form
-                  className="flex flex-col mx-auto gap-4 mt-6"
-                  onSubmit={props.handleSubmit}
-                >
-                  <CustomInput
-                    id="title"
-                    name="title"
-                    label="Enter your title!"
-                    type="text"
-                    onChange={props.handleChange}
-                    onBlur={props.handleBlur}
-                    value={props.values.title}
-                  />
+          <Formik
+            initialValues={initialFormStatus}
+            validationSchema={createAppoitmentSchema}
+            onSubmit={function (values, actions) {
+              appointmentCreator(values);
+              actions.resetForm();
+            }}
+          >
+            {(props) => (
+              <Form
+                className="flex flex-col mx-auto w-10/12 gap-6 mt-6"
+                onSubmit={props.handleSubmit}
+              >
+                <CustomInput
+                  id="title"
+                  name="title"
+                  label="Enter your title!"
+                  type="text"
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                  value={props.values.title}
+                />
 
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoItem label="Enter your Start Time:">
-                      <TimePicker
-                        className="text-sm  pl-2 border-2 w-full  border-sky-600 rounded-lg py-1"
-                        sx={{
-                          '& .MuiFormControl-root': {
-                            border: '0px solid transparent'
-                          },
-                          '& .MuiInputBase-root': {
-                            width: '500px',
-                            color: '#717171'
-                          }
-                        }}
-                        value={dayjs(props.values.startTime)}
-                        onChange={(newValue) => {
-                          props.values.startTime = dayjs(newValue.$d).format(
-                            'ddd, DD MMM YYYY hh:mm:ss'
-                          );
-                        }}
-                        defaultValue={dayjs(getCurrentTime())}
-                      />
-                    </DemoItem>
-                  </LocalizationProvider>
+                <div className="flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-0 ">
+                  <div className="w-full lg:w-6/12">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['DatePicker']}>
+                        <DatePicker
+                          sx={{
+                            '& .MuiFormControl-root': {
+                              border: '0px solid transparent'
+                            },
+                            '& .MuiInputBase-root': {
+                              color: '#717171'
+                            }
+                          }}
+                          label="Select the date"
+                          value={dayjs(props.values.date)}
+                          onChange={(newValue) => {
+                            props.values.date = dayjs(newValue.$d).format(
+                              'ddd, DD MMM YYYY'
+                            );
+                          }}
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </div>
 
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoItem label="Enter your End Time:">
-                      <TimePicker
-                        className="text-sm  pl-2 border-2 w-full  border-sky-600 rounded-lg py-1"
-                        sx={{
-                          '& .MuiFormControl-root': {
-                            border: '0px solid transparent'
-                          },
-                          '& .MuiInputBase-root': {
-                            width: '500px',
-                            color: '#717171'
-                          }
-                        }}
-                        value={dayjs(props.values.endTime)}
-                        onChange={(newValue) => {
-                          props.values.endTime = dayjs(newValue.$d).format(
-                            'ddd, MMM DD YYYY hh:mm:ss A'
-                          );
-                        }}
-                        defaultValue={dayjs(getCurrentTime())}
-                      />
-                    </DemoItem>
-                  </LocalizationProvider>
+                  <div className="flex flex-col w-full lg:w-6/12">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoItem label="Enter your Start Time:">
+                        <TimePicker
+                          className="text-sm  pl-2 border-2 w-full  border-sky-600 rounded-lg py-1"
+                          sx={{
+                            '& .MuiFormControl-root': {
+                              border: '0px solid transparent'
+                            },
+                            '& .MuiInputBase-root': {
+                              color: '#717171'
+                            }
+                          }}
+                          value={dayjs(props.values.startTime)}
+                          onChange={(newValue) => {
+                            props.values.startTime = dayjs(newValue.$d).format(
+                              'hh:mm:ss'
+                            );
+                          }}
+                          defaultValue={dayjs(getCurrentTime())}
+                        />
+                      </DemoItem>
+                    </LocalizationProvider>
 
-                  <CustomInput
-                    id="description"
-                    name="description"
-                    label="Enter your description!"
-                    type="text"
-                    onChange={props.handleChange}
-                    onBlur={props.handleBlur}
-                    value={props.values.description}
-                    multiline
-                    rows={4}
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoItem label="Enter your End Time:">
+                        <TimePicker
+                          className="text-sm  pl-2 border-2 w-full  border-sky-600 rounded-lg py-1"
+                          sx={{
+                            '& .MuiFormControl-root': {
+                              border: '0px solid transparent'
+                            },
+                            '& .MuiInputBase-root': {
+                              color: '#717171'
+                            }
+                          }}
+                          value={dayjs(props.values.endTime)}
+                          onChange={(newValue) => {
+                            props.values.endTime = dayjs(newValue.$d).format(
+                              'hh:mm:ss'
+                            );
+                          }}
+                          defaultValue={dayjs(getCurrentTime())}
+                        />
+                      </DemoItem>
+                    </LocalizationProvider>
+                  </div>
+                </div>
+
+                <CustomInput
+                  id="description"
+                  name="description"
+                  label="Enter your description!"
+                  type="text"
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                  value={props.values.description}
+                  multiline
+                  rows={4}
+                />
+
+                <div className="flex">
+                  <CustomLinkBtn
+                    path={'../CurrentSchedule'}
+                    className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
+                    text={'Go Back'}
+                    icon={<GoBackIcon />}
                   />
 
                   <button
                     type="submit"
-                    className="custom-btn-styles items-center justify-center w-6/12 mx-auto mt-4"
+                    className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
                   >
                     <CustomBtnInnerContent
                       text="Submit"
                       icon={<ScheduleIcon />}
                     />
                   </button>
-                </Form>
-              )}
-            </Formik>
-          </div>
-
-          <div className="basis-1/2">
-            <CustomLinkBtn
-              path={'../CurrentSchedule'}
-              className={
-                'flex justify-center items-center gap-2 bg-gradient-to-tr w-[350px] mb-6 from-sky-600 to-sky-900 py-2 px-10 text-center align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
-              }
-              text={'Go Back'}
-              icon={<GoBackIcon />}
-            />
-
-            <Calendar onChange={onChange} value={value} />
-          </div>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </div>
       </div>
     </div>
