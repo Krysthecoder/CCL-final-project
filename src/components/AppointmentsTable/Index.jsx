@@ -8,11 +8,21 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { TableFooter } from '@mui/material';
+import dayjs from 'dayjs';
 
 const timeExtractor = (dateString) => {
   const timeMatch = dateString.match(/T(\d{2}:\d{2}:\d{2})/);
   if (timeMatch) {
     return timeMatch[1];
+  } else {
+    return null;
+  }
+};
+
+const dateExtractor = (dateString) => {
+  const dateMatch = dateString.match(/(\d{4}-\d{2}-\d{2})/);
+  if (dateMatch) {
+    return dateMatch[0];
   } else {
     return null;
   }
@@ -28,6 +38,8 @@ export default function AppointmentsTable({ rowData }) {
       fontSize: 14
     }
   }));
+
+  console.log(rowData);
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -55,6 +67,7 @@ export default function AppointmentsTable({ rowData }) {
               <StyledTableCell align="center">Title</StyledTableCell>
               <StyledTableCell align="center">StartTime</StyledTableCell>
               <StyledTableCell align="center">EndTime</StyledTableCell>
+              <StyledTableCell align="center">Date</StyledTableCell>
               <StyledTableCell align="center">Created By</StyledTableCell>
               <StyledTableCell align="center">Description</StyledTableCell>
             </TableRow>
@@ -75,7 +88,12 @@ export default function AppointmentsTable({ rowData }) {
                   {timeExtractor(row.endTime)}
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  {row?.user?.email ?? '--'}
+                  {dayjs(dateExtractor(row.startTime)).format(
+                    'ddd, DD MMM YYYY'
+                  )}
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  {row?.user?.firstName ?? '--'}
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   {row.description || '--'}
