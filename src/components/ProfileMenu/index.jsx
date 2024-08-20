@@ -2,7 +2,6 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { utilsData } from '../../utils/utilsData';
 import LogoutBtn from '../LogOut';
 import { ArrowDown } from '../../icons';
 
@@ -25,7 +24,7 @@ const ProfileMenu = () => {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        <span className="flex gap-2 justify-center items-center text-stone-300 capitalize text-2xl">
+        <span className="flex gap-2 justify-center items-center text-stone-300 capitalize text-lg md:text-2xl">
           {localStorage.getItem('userName')}
           <ArrowDown />
         </span>
