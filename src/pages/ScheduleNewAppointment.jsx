@@ -1,7 +1,11 @@
-import React, { startTransition, useState } from 'react';
+import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
-import Calendar from 'react-calendar';
-import { GoBackIcon, ScheduleIcon } from '../icons';
+import {
+  GoBackIcon,
+  ScheduleIcon,
+  UserDeniedIcon,
+  WelcomeIcon
+} from '../icons';
 import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
 import { Form, Formik } from 'formik';
 import { CustomInput } from '../components/CustomInput';
@@ -16,11 +20,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { CircularProgress } from '@mui/material';
 
 function ScheduleNewAppointment() {
   dayjs.extend(customParseFormat);
 
   const token = localStorage.getItem('fetchedToken');
+  const [createApptStatus, setCreateApptStatus] = useState('initialStatus');
+  const [submittingForm, setSubmittingForm] = useState(false);
 
   async function appointmentCreator({
     title,
@@ -29,6 +36,7 @@ function ScheduleNewAppointment() {
     endTime,
     description
   }) {
+    setCreateApptStatus('loadingStatus');
     startTime = date + ' ' + startTime + ' GMT';
     endTime = date + ' ' + endTime + ' GMT';
     try {
@@ -53,26 +61,41 @@ function ScheduleNewAppointment() {
 
       if (response.status === 400) {
         console.log('error', response.error);
+        setCreateApptStatus('failedStatus');
+        statusReset();
         return;
       }
 
       if (response.status === 401) {
+        setCreateApptStatus('failedStatus');
         console.log('error');
+        statusReset();
         return;
       }
 
       if (response.status === 404) {
+        setCreateApptStatus('failedStatus');
         console.log('error');
+        statusReset();
         return;
       }
 
       const json = await response.json();
       console.log(json);
-      console.log('success');
+      setCreateApptStatus('successStatus');
+      statusReset();
+      return;
     } catch (error) {
       console.log('An error occurred:', error);
     }
   }
+
+  const statusReset = () => {
+    setTimeout(() => {
+      setCreateApptStatus('initialStatus');
+      setSubmittingForm(false);
+    }, 1500);
+  };
 
   const getCurrentTime = () => dayjs().format('YYYY-MM-DDTHH:mm');
 
@@ -101,7 +124,7 @@ function ScheduleNewAppointment() {
               actions.resetForm();
             }}
           >
-            {(props) => (
+            {(props, isSubmitting = submittingForm) => (
               <Form
                 className="flex flex-col mx-auto w-10/12 gap-6 mt-6"
                 onSubmit={props.handleSubmit}
@@ -114,6 +137,7 @@ function ScheduleNewAppointment() {
                   onChange={props.handleChange}
                   onBlur={props.handleBlur}
                   value={props.values.title}
+                  disabled={isSubmitting}
                 />
 
                 <div className="flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-0 ">
@@ -136,6 +160,7 @@ function ScheduleNewAppointment() {
                               'ddd, DD MMM YYYY'
                             );
                           }}
+                          disabled={isSubmitting}
                         />
                       </DemoContainer>
                     </LocalizationProvider>
@@ -161,6 +186,7 @@ function ScheduleNewAppointment() {
                             );
                           }}
                           defaultValue={dayjs(getCurrentTime())}
+                          disabled={isSubmitting}
                         />
                       </DemoItem>
                     </LocalizationProvider>
@@ -184,6 +210,7 @@ function ScheduleNewAppointment() {
                             );
                           }}
                           defaultValue={dayjs(getCurrentTime())}
+                          disabled={isSubmitting}
                         />
                       </DemoItem>
                     </LocalizationProvider>
@@ -200,6 +227,7 @@ function ScheduleNewAppointment() {
                   value={props.values.description}
                   multiline
                   rows={4}
+                  disabled={isSubmitting}
                 />
 
                 <div className="flex">
@@ -208,16 +236,48 @@ function ScheduleNewAppointment() {
                     className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
                     text={'Go Back'}
                     icon={<GoBackIcon />}
+                    disabled={isSubmitting}
                   />
 
                   <button
                     type="submit"
                     className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
+                    disabled={isSubmitting}
                   >
-                    <CustomBtnInnerContent
-                      text="Submit"
-                      icon={<ScheduleIcon />}
-                    />
+                    {createApptStatus === 'initialStatus' ? (
+                      <CustomBtnInnerContent
+                        text="Submit"
+                        icon={<ScheduleIcon />}
+                      />
+                    ) : null}
+
+                    {createApptStatus === 'loadingStatus' ? (
+                      <CustomBtnInnerContent
+                        text="Loading"
+                        icon={
+                          <CircularProgress
+                            size={20}
+                            sx={{
+                              color: 'white'
+                            }}
+                          />
+                        }
+                      />
+                    ) : null}
+
+                    {createApptStatus === 'failedStatus' ? (
+                      <CustomBtnInnerContent
+                        text="Submit"
+                        icon={<UserDeniedIcon />}
+                      />
+                    ) : null}
+
+                    {createApptStatus === 'successStatus' ? (
+                      <CustomBtnInnerContent
+                        text="Appointment Created"
+                        icon={<WelcomeIcon />}
+                      />
+                    ) : null}
                   </button>
                 </div>
               </Form>
