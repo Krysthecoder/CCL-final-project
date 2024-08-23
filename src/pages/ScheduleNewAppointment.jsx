@@ -100,8 +100,8 @@ function ScheduleNewAppointment() {
   const getCurrentTime = () => dayjs().format('YYYY-MM-DDTHH:mm');
 
   const initialFormStatus = {
-    title: '',
-    date: '',
+    title: 'Enter your title',
+    date: dayjs(getCurrentTime()),
     startTime: dayjs(getCurrentTime()),
     endTime: dayjs(getCurrentTime()),
     description: ''
@@ -129,48 +129,22 @@ function ScheduleNewAppointment() {
                 className="flex flex-col mx-auto w-10/12 gap-6 mt-6"
                 onSubmit={props.handleSubmit}
               >
-                <CustomInput
-                  id="title"
-                  name="title"
-                  label="Enter your title!"
-                  type="text"
-                  onChange={props.handleChange}
-                  onBlur={props.handleBlur}
-                  value={props.values.title}
-                  disabled={isSubmitting}
-                />
-
-                <div className="flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-0 ">
-                  <div className="w-full lg:w-6/12">
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={['DatePicker']}>
-                        <DatePicker
-                          sx={{
-                            '& .MuiFormControl-root': {
-                              border: '0px solid transparent'
-                            },
-                            '& .MuiInputBase-root': {
-                              color: '#717171'
-                            }
-                          }}
-                          label="Select the date"
-                          value={dayjs(props.values.date)}
-                          onChange={(newValue) => {
-                            props.values.date = dayjs(newValue.$d).format(
-                              'ddd, DD MMM YYYY'
-                            );
-                          }}
-                          disabled={isSubmitting}
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </div>
-
-                  <div className="flex flex-col w-full lg:w-6/12">
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-4">
+                  <div className="flex flex-col w-full lg:w-6/12 gap-4 mt-2 justify-center">
+                    <CustomInput
+                      id="title"
+                      name="title"
+                      label="Enter your title!"
+                      type="text"
+                      onChange={props.handleChange}
+                      onBlur={props.handleBlur}
+                      value={props.values.title}
+                      disabled={isSubmitting}
+                    />
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoItem label="Enter your Start Time:">
                         <TimePicker
-                          className="text-sm  pl-2 border-2 w-full  border-sky-600 rounded-lg py-1"
+                          className="text-sm pl-2 border-2 w-full border-sky-600 rounded-lg py-1"
                           sx={{
                             '& .MuiFormControl-root': {
                               border: '0px solid transparent'
@@ -189,6 +163,32 @@ function ScheduleNewAppointment() {
                           disabled={isSubmitting}
                         />
                       </DemoItem>
+                    </LocalizationProvider>
+                  </div>
+
+                  <div className="flex flex-col w-full lg:w-6/12 gap-4 justify-center">
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={['DatePicker']}>
+                        <DatePicker
+                          className="w-full"
+                          sx={{
+                            '& .MuiFormControl-root': {
+                              border: '0px solid transparent'
+                            },
+                            '& .MuiInputBase-root': {
+                              color: '#717171'
+                            }
+                          }}
+                          label="Select the date"
+                          value={dayjs(props.values.date)}
+                          onChange={(newValue) => {
+                            props.values.date = dayjs(newValue.$d).format(
+                              'ddd, DD MMM YYYY'
+                            );
+                          }}
+                          disabled={isSubmitting}
+                        />
+                      </DemoContainer>
                     </LocalizationProvider>
 
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -217,18 +217,20 @@ function ScheduleNewAppointment() {
                   </div>
                 </div>
 
-                <CustomInput
-                  id="description"
-                  name="description"
-                  label="Enter your description!"
-                  type="text"
-                  onChange={props.handleChange}
-                  onBlur={props.handleBlur}
-                  value={props.values.description}
-                  multiline
-                  rows={4}
-                  disabled={isSubmitting}
-                />
+                <div className="flex justify-center">
+                  <CustomInput
+                    id="description"
+                    name="description"
+                    label="Enter your description!"
+                    type="text"
+                    onChange={props.handleChange}
+                    onBlur={props.handleBlur}
+                    value={props.values.description}
+                    multiline
+                    rows={4}
+                    disabled={isSubmitting}
+                  />
+                </div>
 
                 <div className="flex">
                   <CustomLinkBtn
