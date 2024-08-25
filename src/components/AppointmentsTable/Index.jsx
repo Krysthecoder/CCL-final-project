@@ -10,50 +10,11 @@ import Paper from '@mui/material/Paper';
 import dayjs from 'dayjs';
 import { TrashIcon, EditIcon } from '../../icons';
 import ButtonWithIcon from '../ButtonWithIcon';
-import { utilsData } from '../../utils/utilsData';
-
-const appointmentDeleter = async (appointmentID) => {
-  console.log(
-    `${utilsData.apiURL}${utilsData.apiDeleteAppointment}/${appointmentID}`
-  );
-  try {
-    const response = await fetch(
-      `${utilsData.apiURL}${utilsData.apiDeleteAppointment}/${appointmentID}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': localStorage.getItem('fetchedToken')
-        }
-      }
-    );
-    if (!response.ok) {
-      console.log(response);
-    }
-    const json = await response.json();
-    console.log(json);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const timeExtractor = (dateString) => {
-  const timeMatch = dateString.match(/T(\d{2}:\d{2}:\d{2})/);
-  if (timeMatch) {
-    return timeMatch[1];
-  } else {
-    return null;
-  }
-};
-
-const dateExtractor = (dateString) => {
-  const dateMatch = dateString.match(/(\d{4}-\d{2}-\d{2})/);
-  if (dateMatch) {
-    return dateMatch[0];
-  } else {
-    return null;
-  }
-};
+import {
+  timeExtractor,
+  appointmentDeleter,
+  dateExtractor
+} from '../../helpers';
 
 export default function AppointmentsTable({ rowData }) {
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -142,7 +103,6 @@ export default function AppointmentsTable({ rowData }) {
                       // btnClassName="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                       IconComp={<TrashIcon />}
                       onClickFn={async () => {
-                        console.log(row.id);
                         appointmentDeleter(row.id);
                       }}
                     />
