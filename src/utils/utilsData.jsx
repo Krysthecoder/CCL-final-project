@@ -3,7 +3,8 @@ export const utilsData = {
   apiSignInRoute: 'auth/signin',
   apiSignUpRoute: 'auth/signup',
   apiGetCurrentAppointments: 'appointment',
-  apiCreatNewAppointment: 'appointment'
+  apiCreatNewAppointment: 'appointment',
+  apiDeleteAppointment: 'appointment/:'
 };
 
 export const officeHours = [
