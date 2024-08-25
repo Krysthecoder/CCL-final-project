@@ -17,28 +17,3 @@ export const timeExtractor = (dateString) => {
     return null;
   }
 };
-
-export const appointmentDeleter = async (appointmentID) => {
-  console.log(
-    `${utilsData.apiURL}${utilsData.apiDeleteAppointment}/${appointmentID}`
-  );
-  try {
-    const response = await fetch(
-      `${utilsData.apiURL}${utilsData.apiDeleteAppointment}/${appointmentID}`,
-      {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': localStorage.getItem('fetchedToken')
-        }
-      }
-    );
-    if (!response.ok) {
-      console.log(response);
-    }
-    const json = await response.json();
-    console.log(json);
-  } catch (error) {
-    console.log(error);
-  }
-};
