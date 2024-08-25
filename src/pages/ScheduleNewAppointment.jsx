@@ -86,7 +86,7 @@ function ScheduleNewAppointment() {
       statusReset();
       return;
     } catch (error) {
-      console.log('An error occurred:', error);
+      console.log('An error occurred:', error); //todo: delete all logs and control the status: send error to a component or something
     }
   }
 
@@ -159,7 +159,7 @@ function ScheduleNewAppointment() {
                               'hh:mm:ss'
                             );
                           }}
-                          defaultValue={dayjs(getCurrentTime())}
+                          defaultValue={props.startTime}
                           disabled={isSubmitting}
                         />
                       </DemoItem>
@@ -182,6 +182,7 @@ function ScheduleNewAppointment() {
                           label="Select the date"
                           value={dayjs(props.values.date)}
                           onChange={(newValue) => {
+                            console.log({ newValue, values: props.values });
                             props.values.date = dayjs(newValue.$d).format(
                               'ddd, DD MMM YYYY'
                             );

@@ -107,7 +107,7 @@ function LoginPage() {
     >
       <img
         src={img}
-        alt="login-doctor-image?"
+        alt="login-doctor-image"
         className="
           w-5/12 rounded-2xl
           md:w-4/12

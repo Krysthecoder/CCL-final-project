@@ -4,7 +4,7 @@ export const utilsData = {
   apiSignUpRoute: 'auth/signup',
   apiGetCurrentAppointments: 'appointment',
   apiCreatNewAppointment: 'appointment',
-  apiDeleteAppointment: 'appointment/:'
+  apiDeleteAppointment: 'appointment'
 };
 
 export const officeHours = [

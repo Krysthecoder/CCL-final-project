@@ -51,7 +51,7 @@ export const createAppoitmentSchema = yup.object().shape({
     .required('End-time is required!s')
     .notOneOf(
       [yup.ref('startTime'), null],
-      'Appointment cant last less than one minute'
+      "Appointment can't last less than one minute"
     ),
   description: yup
     .string()
