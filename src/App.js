@@ -9,8 +9,9 @@ import LoginPage from './pages/LoginPage';
 import SignUp from './pages/SignUp';
 import CurrentSchedule from './pages/CurrentSchedule';
 import ScheduleNewAppointment from './pages/ScheduleNewAppointment';
-import ProtectedRoutes from './pages/ProtectedRoutes';
+import EditAppointment from './pages/EditAppointment';
 import NotFoundPage from './pages/404Page';
+import ProtectedRoutes from './pages/ProtectedRoutes';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
                 path="/ScheduleNewAppointment"
                 element={<ScheduleNewAppointment />}
               />
+              <Route path="/EditAppointment" element={<EditAppointment />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/404Page" />} />
