@@ -182,7 +182,6 @@ function ScheduleNewAppointment() {
                           label="Select the date"
                           value={dayjs(props.values.date)}
                           onChange={(newValue) => {
-                            console.log({ newValue, values: props.values });
                             props.values.date = dayjs(newValue.$d).format(
                               'ddd, DD MMM YYYY'
                             );
