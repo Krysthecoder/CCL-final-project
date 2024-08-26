@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { styled } from '@mui/material/styles';
 import TableRow from '@mui/material/TableRow';
@@ -12,6 +13,14 @@ import { utilsData } from '../../utils/utilsData';
 const AppointmentRow = ({ row, i }) => {
   const [deletingStatus, setDeletingStatus] = useState('initial');
   const [rowDeleted, setRowDeleted] = useState('');
+
+  const reouteState = {
+    id: row.id,
+    title: row.title,
+    startTime: row.startTime,
+    endTime: row.endTime,
+    description: row.description
+  };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -33,9 +42,6 @@ const AppointmentRow = ({ row, i }) => {
   }));
 
   const appointmentDeleter = async (appointmentID) => {
-    console.log(
-      `${utilsData.apiURL}${utilsData.apiDeleteAppointment}/${appointmentID}`
-    );
     try {
       const response = await fetch(
         `${utilsData.apiURL}${utilsData.apiDeleteAppointment}/${appointmentID}`,
@@ -95,15 +101,17 @@ const AppointmentRow = ({ row, i }) => {
           <StyledTableCell align="center">
             {deletingStatus === 'initial' ? (
               <div className="flex flex-row  justify-around">
-                <ButtonWithIcon
-                  key={i}
-                  btnCaption=""
-                  btnClassName="hover:scale-110 ease-in-out"
-                  IconComp={<EditIcon />}
-                  onClickFn={() => {
-                    console.log(row.id);
-                  }}
-                />
+                <Link
+                  to={'/EditAppointment'}
+                  className="flex items-center"
+                  state={reouteState}
+                >
+                  <ButtonWithIcon
+                    key={i}
+                    btnClassName="hover:scale-110 ease-in-out"
+                    IconComp={<EditIcon />}
+                  />
+                </Link>
                 <ButtonWithIcon
                   key={i}
                   btnCaption=""
