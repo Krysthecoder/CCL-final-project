@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import NavBar from '../components/NavBar';
 import {
   GoBackIcon,
@@ -8,7 +7,7 @@ import {
   WelcomeIcon
 } from '../icons';
 import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
 import { createAppoitmentSchema } from '../schemas';
@@ -20,13 +19,91 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { CircularProgress } from '@mui/material';
+import { utilsData } from '../utils/utilsData';
 
 function EditAppointment() {
   const location = useLocation();
-  const [createApptStatus, setCreateApptStatus] = useState('initialStatus');
+  const [apointmentEditStatus, setAppointmentEditStatus] =
+    useState('initialStatus');
   const [submittingForm, setSubmittingForm] = useState(false);
-
+  const navigate = useNavigate();
   const id = location.state.id;
+
+  const appointmentEditor = async ({
+    title,
+    date,
+    startTime,
+    endTime,
+    description
+  }) => {
+    setAppointmentEditStatus('editingStatus');
+    startTime = `${date} ${startTime} GMT`;
+    endTime = `${date} ${endTime} GMT`;
+    try {
+      const response = await fetch(
+        `${utilsData.apiURL}${utilsData.apiCreatNewAppointment}/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': localStorage.getItem('fetchedToken')
+          },
+          body: JSON.stringify({
+            title,
+            user: localStorage.getItem('userId'),
+            startTime,
+            endTime,
+            description,
+            createdBy: localStorage.getItem('userId')
+          })
+        }
+      );
+
+      if (response.status === 400) {
+        console.log('error', response.error);
+        setAppointmentEditStatus('failedStatus');
+        statusReset();
+        return;
+      }
+
+      if (response.status === 401) {
+        setAppointmentEditStatus('failedStatus');
+        console.log('error');
+        statusReset();
+        return;
+      }
+
+      if (response.status === 404) {
+        setAppointmentEditStatus('failedStatus');
+        console.log('error');
+        statusReset();
+        return;
+      }
+
+      const json = await response.json();
+      console.log(json);
+      setAppointmentEditStatus('successStatus');
+      statusReset();
+      return;
+    } catch (error) {
+      console.log('An error occurred:', error);
+    }
+  };
+
+  const statusReset = () => {
+    setTimeout(() => {
+      setAppointmentEditStatus('initialStatus');
+      setSubmittingForm(false);
+      pageRedirecter();
+    }, 1500);
+  };
+
+  const pageRedirecter = () => {
+    navigate({
+      pathname: '/CurrentSchedule'
+    });
+  };
+  const getCurrentTime = () => dayjs().format('YYYY-MM-DDTHH:mm');
 
   const initialFormStatus = {
     title: location.state.title,
@@ -34,8 +111,6 @@ function EditAppointment() {
     endTime: location.state.endTime,
     description: location.state.description
   };
-
-  const getCurrentTime = () => dayjs().format('YYYY-MM-DDTHH:mm');
 
   return (
     <div>
@@ -48,7 +123,7 @@ function EditAppointment() {
             initialValues={initialFormStatus}
             validationSchema={createAppoitmentSchema}
             onSubmit={function (values, actions) {
-              //
+              appointmentEditor(values);
               actions.resetForm();
             }}
           >
@@ -84,7 +159,7 @@ function EditAppointment() {
                           value={dayjs(props.values.startTime)}
                           onChange={(newValue) => {
                             props.values.startTime = dayjs(newValue.$d).format(
-                              'hh:mm:ss'
+                              'HH:mm:ss'
                             );
                           }}
                           disabled={isSubmitting}
@@ -133,7 +208,7 @@ function EditAppointment() {
                           value={dayjs(props.values.endTime)}
                           onChange={(newValue) => {
                             props.values.endTime = dayjs(newValue.$d).format(
-                              'hh:mm:ss'
+                              'HH:mm:ss'
                             );
                           }}
                           defaultValue={dayjs(getCurrentTime())}
@@ -173,14 +248,14 @@ function EditAppointment() {
                     className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
                     disabled={isSubmitting}
                   >
-                    {createApptStatus === 'initialStatus' ? (
+                    {apointmentEditStatus === 'initialStatus' ? (
                       <CustomBtnInnerContent
                         text="Submit"
                         icon={<ScheduleIcon />}
                       />
                     ) : null}
 
-                    {createApptStatus === 'loadingStatus' ? (
+                    {apointmentEditStatus === 'editingStatus' ? (
                       <CustomBtnInnerContent
                         text="Loading"
                         icon={
@@ -194,16 +269,16 @@ function EditAppointment() {
                       />
                     ) : null}
 
-                    {createApptStatus === 'failedStatus' ? (
+                    {apointmentEditStatus === 'failedStatus' ? (
                       <CustomBtnInnerContent
                         text="Submit"
                         icon={<UserDeniedIcon />}
                       />
                     ) : null}
 
-                    {createApptStatus === 'successStatus' ? (
+                    {apointmentEditStatus === 'successStatus' ? (
                       <CustomBtnInnerContent
-                        text="Appointment Created"
+                        text="Appointment Edited"
                         icon={<WelcomeIcon />}
                       />
                     ) : null}
