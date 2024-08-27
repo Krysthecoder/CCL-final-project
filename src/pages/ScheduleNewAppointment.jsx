@@ -156,7 +156,7 @@ function ScheduleNewAppointment() {
                           value={dayjs(props.values.startTime)}
                           onChange={(newValue) => {
                             props.values.startTime = dayjs(newValue.$d).format(
-                              'hh:mm:ss'
+                              'HH:mm:ss'
                             );
                           }}
                           defaultValue={props.startTime}
@@ -182,6 +182,7 @@ function ScheduleNewAppointment() {
                           label="Select the date"
                           value={dayjs(props.values.date)}
                           onChange={(newValue) => {
+                            console.log({ newValue, values: props.values });
                             props.values.date = dayjs(newValue.$d).format(
                               'ddd, DD MMM YYYY'
                             );
@@ -206,7 +207,7 @@ function ScheduleNewAppointment() {
                           value={dayjs(props.values.endTime)}
                           onChange={(newValue) => {
                             props.values.endTime = dayjs(newValue.$d).format(
-                              'hh:mm:ss'
+                              'HH:mm:ss'
                             );
                           }}
                           defaultValue={dayjs(getCurrentTime())}

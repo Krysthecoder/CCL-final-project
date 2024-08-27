@@ -8,7 +8,7 @@ import {
   WelcomeIcon
 } from '../icons';
 import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
 import { createAppoitmentSchema } from '../schemas';
@@ -30,8 +30,8 @@ function EditAppointment() {
 
   const initialFormStatus = {
     title: location.state.title,
-    startTime: location.state.startTime.slice(0, 16),
-    endTime: location.state.endTime.slice(0, 16),
+    startTime: location.state.startTime,
+    endTime: location.state.endTime,
     description: location.state.description
   };
 
