@@ -58,3 +58,19 @@ export const createAppoitmentSchema = yup.object().shape({
     .min(5, 'Please be more descriptive.')
     .required('Description is required!')
 });
+
+export const editAppointmentSchema = yup.object().shape({
+  title: yup
+    .string()
+    .min(5, 'too Short, please be more descriptive')
+    .max(15, 'too long, please be more concised'),
+  date: yup.string().required('Date is required'),
+  startTime: yup.string(),
+  endTime: yup
+    .string()
+    .notOneOf(
+      [yup.ref('startTime'), null],
+      "Appointment can't last less than one minute"
+    ),
+  description: yup.string().min(5, 'Please be more descriptive.')
+});

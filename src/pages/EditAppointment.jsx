@@ -10,7 +10,7 @@ import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
-import { createAppoitmentSchema } from '../schemas';
+import { editAppointmentSchema } from '../schemas';
 import { CustomInput } from '../components/CustomInput';
 import dayjs from 'dayjs';
 import { DemoItem, DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -121,7 +121,7 @@ function EditAppointment() {
 
           <Formik
             initialValues={initialFormStatus}
-            validationSchema={createAppoitmentSchema}
+            validationSchema={editAppointmentSchema}
             onSubmit={function (values, actions) {
               appointmentEditor(values);
               actions.resetForm();
