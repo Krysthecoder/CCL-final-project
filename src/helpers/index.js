@@ -1,5 +1,3 @@
-import { utilsData } from '../utils/utilsData';
-
 export const dateExtractor = (dateString) => {
   const dateMatch = dateString.match(/(\d{4}-\d{2}-\d{2})/);
   if (dateMatch) {
