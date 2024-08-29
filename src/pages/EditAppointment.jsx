@@ -80,8 +80,6 @@ function EditAppointment() {
         return;
       }
 
-      const json = await response.json();
-      console.log(json);
       setAppointmentEditStatus('successStatus');
       statusReset();
       return;

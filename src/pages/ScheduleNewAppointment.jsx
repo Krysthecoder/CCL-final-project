@@ -80,13 +80,11 @@ function ScheduleNewAppointment() {
         return;
       }
 
-      const json = await response.json();
-      console.log(json);
       setCreateApptStatus('successStatus');
       statusReset();
       return;
     } catch (error) {
-      console.log('An error occurred:', error); //todo: delete all logs and control the status: send error to a component or something
+      console.error('An error occurred:', error);
     }
   }
 
