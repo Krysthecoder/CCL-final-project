@@ -13,6 +13,7 @@ import { utilsData } from '../../utils/utilsData';
 const AppointmentRow = ({ row, i }) => {
   const [deletingStatus, setDeletingStatus] = useState('initial');
   const [rowDeleted, setRowDeleted] = useState('');
+  const { apiURL, apiDeleteAppointment } = utilsData;
 
   const reouteState = {
     id: row.id,
@@ -44,7 +45,7 @@ const AppointmentRow = ({ row, i }) => {
   const appointmentDeleter = async (appointmentID) => {
     try {
       const response = await fetch(
-        `${utilsData.apiURL}${utilsData.apiDeleteAppointment}/${appointmentID}`,
+        `${apiURL}${apiDeleteAppointment}/${appointmentID}`,
         {
           method: 'DELETE',
           headers: {
