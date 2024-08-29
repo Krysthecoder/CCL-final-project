@@ -33,13 +33,19 @@ export default function AppointmentsTable({ rowData }) {
         >
           <TableHead>
             <TableRow>
-              <StyledTableCell align="center">Title</StyledTableCell>
-              <StyledTableCell align="center">StartTime</StyledTableCell>
-              <StyledTableCell align="center">EndTime</StyledTableCell>
-              <StyledTableCell align="center">Date</StyledTableCell>
-              <StyledTableCell align="center">Created By</StyledTableCell>
-              <StyledTableCell align="center">Description</StyledTableCell>
-              <StyledTableCell align="center">Action</StyledTableCell>
+              {[
+                'Title',
+                'Start Time',
+                'End Time',
+                'Date',
+                'Created By',
+                'Description',
+                'Actions'
+              ].map((headItem, indx) => (
+                <StyledTableCell align="center" key={indx}>
+                  {headItem}
+                </StyledTableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
