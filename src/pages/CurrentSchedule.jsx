@@ -34,7 +34,7 @@ function CurrentSchedule() {
       <NavBar />
 
       <div className="flex flex-col w-4/5 justify-center items-center mx-auto mt-6">
-        <div className="flex justify-between w-full items-center">
+        <div className="flex flex-col md:flex-row justify-between w-full items-center">
           <h1 className="text-2xl">Your Current Appointments are:</h1>
 
           <CustomLinkBtn
