@@ -27,7 +27,10 @@ export const CustomLinkBtn = ({
   );
 };
 
-export const CustomBtnInnerContent = ({ text, icon }) => {
+export const CustomBtnInnerContent = ({
+  text = 'This need a caption',
+  icon = ExclamationIcon
+}) => {
   return (
     <>
       <span>{text}</span>
