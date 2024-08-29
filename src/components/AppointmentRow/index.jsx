@@ -55,14 +55,12 @@ const AppointmentRow = ({ row, i }) => {
         }
       );
       if (!response.ok) {
-        console.log(response);
+        throw new Error(`Request failed with status ${response.status}`);
       }
-      const json = await response.json();
-      console.log(json);
       setDeletingStatus('deleted');
       statusReset();
     } catch (error) {
-      console.log(error);
+      console.error('Error deleting appointment: ', error);
     }
   };
 
