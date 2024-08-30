@@ -20,15 +20,21 @@ import { TimePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { CircularProgress } from '@mui/material';
 import { utilsData } from '../utils/utilsData';
+import { useFormStatusController } from '../helpers';
 
 function EditAppointment() {
   const navigate = useNavigate();
   const location = useLocation();
   const id = location.state.id;
+  const token = localStorage.getItem('fetchedToken');
   const { apiURL, apiCreatNewAppointment } = utilsData;
-  const [apointmentEditStatus, setAppointmentEditStatus] =
-    useState('initialStatus');
-  const [submittingForm, setSubmittingForm] = useState(false);
+  const {
+    fetchingStatus,
+    submittingForm,
+    loadingStatus,
+    failedStatus,
+    successStatus
+  } = useFormStatusController();
 
   const appointmentEditor = async ({
     title,
@@ -37,7 +43,7 @@ function EditAppointment() {
     endTime,
     description
   }) => {
-    setAppointmentEditStatus('editingStatus');
+    loadingStatus();
     startTime = `${date} ${startTime} GMT`;
     endTime = `${date} ${endTime} GMT`;
     try {
@@ -45,7 +51,7 @@ function EditAppointment() {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'x-access-token': localStorage.getItem('fetchedToken')
+          'x-access-token': token
         },
         body: JSON.stringify({
           title,
@@ -58,40 +64,26 @@ function EditAppointment() {
       });
 
       if (response.status === 400) {
-        console.log('error', response.error);
-        setAppointmentEditStatus('failedStatus');
-        statusReset();
-        return;
+        failedStatus();
+        throw new Error(`Error editing appointment: ${response.error}`);
       }
 
       if (response.status === 401) {
-        setAppointmentEditStatus('failedStatus');
-        console.log('error');
-        statusReset();
-        return;
+        failedStatus();
+        throw new Error(`Error editing appointment: ${response.error}`);
       }
 
       if (response.status === 404) {
-        setAppointmentEditStatus('failedStatus');
-        console.log('error');
-        statusReset();
-        return;
+        failedStatus();
+        throw new Error(`Error editing appointment: ${response.error}`);
       }
 
-      setAppointmentEditStatus('successStatus');
-      statusReset();
+      successStatus();
+      pageRedirecter();
       return;
     } catch (error) {
       console.log('An error occurred:', error);
     }
-  };
-
-  const statusReset = () => {
-    setTimeout(() => {
-      setAppointmentEditStatus('initialStatus');
-      setSubmittingForm(false);
-      pageRedirecter();
-    }, 1500);
   };
 
   const pageRedirecter = () => {
@@ -244,14 +236,14 @@ function EditAppointment() {
                     className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
                     disabled={isSubmitting}
                   >
-                    {apointmentEditStatus === 'initialStatus' ? (
+                    {fetchingStatus === 'initialStatus' ? (
                       <CustomBtnInnerContent
                         text="Submit"
                         icon={<ScheduleIcon />}
                       />
                     ) : null}
 
-                    {apointmentEditStatus === 'editingStatus' ? (
+                    {fetchingStatus === 'loadingStatus' ? (
                       <CustomBtnInnerContent
                         text="Loading"
                         icon={
@@ -265,14 +257,14 @@ function EditAppointment() {
                       />
                     ) : null}
 
-                    {apointmentEditStatus === 'failedStatus' ? (
+                    {fetchingStatus === 'failedStatus' ? (
                       <CustomBtnInnerContent
                         text="Submit"
                         icon={<UserDeniedIcon />}
                       />
                     ) : null}
 
-                    {apointmentEditStatus === 'successStatus' ? (
+                    {fetchingStatus === 'successStatus' ? (
                       <CustomBtnInnerContent
                         text="Appointment Edited"
                         icon={<WelcomeIcon />}
