@@ -26,7 +26,7 @@ import { useFormStatusController } from '../helpers';
 function ScheduleNewAppointment() {
   dayjs.extend(customParseFormat);
   const token = localStorage.getItem('fetchedToken');
-  const { apiURL, apiCreatNewAppointment } = utilsData;
+  const { apiURL, apiAppointments } = utilsData;
   const {
     fetchingStatus,
     submittingForm,
@@ -46,7 +46,7 @@ function ScheduleNewAppointment() {
     startTime = date + ' ' + startTime + ' GMT';
     endTime = date + ' ' + endTime + ' GMT';
     try {
-      const response = await fetch(`${apiURL}${apiCreatNewAppointment}`, {
+      const response = await fetch(`${apiURL}${apiAppointments}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

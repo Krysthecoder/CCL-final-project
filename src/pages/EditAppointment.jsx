@@ -27,7 +27,7 @@ function EditAppointment() {
   const location = useLocation();
   const id = location.state.id;
   const token = localStorage.getItem('fetchedToken');
-  const { apiURL, apiCreatNewAppointment } = utilsData;
+  const { apiURL, apiAppointments } = utilsData;
   const {
     fetchingStatus,
     submittingForm,
@@ -47,7 +47,7 @@ function EditAppointment() {
     startTime = `${date} ${startTime} GMT`;
     endTime = `${date} ${endTime} GMT`;
     try {
-      const response = await fetch(`${apiURL}${apiCreatNewAppointment}/${id}`, {
+      const response = await fetch(`${apiURL}${apiAppointments}/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
