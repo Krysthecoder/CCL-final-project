@@ -13,17 +13,24 @@ import { loginSchema } from '../schemas';
 import { CircularProgress } from '@mui/material';
 import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
 import { CustomInput } from '../components/CustomInput';
+import { useFormStatusController } from '../helpers';
 
 function LoginPage() {
-  const [signinStatus, setSigningStatus] = useState('initialStatus');
+  const {
+    fetchingStatus,
+    submittingForm,
+    loadingStatus,
+    failedStatus,
+    successStatus
+  } = useFormStatusController();
+
   const [isLoggedIn, setIsLoggedIn] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
-  const [submittingForm, setSubmittingForm] = useState(false);
 
   const loginMethod = async ({ email, password }) => {
     try {
-      setSigningStatus('loadingStatus');
+      loadingStatus();
       const response = await fetch(
         utilsData.apiURL + utilsData.apiSignInRoute,
         {
@@ -40,21 +47,18 @@ function LoginPage() {
 
       if (response.status === 400) {
         setErrorMsg('Bad Request, please try again later!');
-        setSigningStatus('failedStatus');
+        failedStatus();
         setIsLoggedIn('unauthorized');
-        statusReset();
         console.log('error');
       } else if (response.status === 401) {
         setErrorMsg('Bad Credentials, please try again!');
-        setSigningStatus('failedStatus');
+        failedStatus();
         setIsLoggedIn('unauthorized');
-        statusReset();
         console.log('error');
       } else if (response.status === 404) {
         setErrorMsg('Bad Credentials, please try again!');
-        setSigningStatus('failedStatus');
+        failedStatus();
         setIsLoggedIn('unauthorized');
-        statusReset();
         console.log('error');
       } else {
         const json = await response.json();
@@ -63,7 +67,7 @@ function LoginPage() {
         }
         if (json.token.length > 0) {
           window.localStorage.setItem('fetchedToken', json.token);
-          setSigningStatus('succesStatus');
+          successStatus();
           console.log('success');
 
           setIsLoggedIn('authorized');
@@ -76,13 +80,6 @@ function LoginPage() {
     } catch (error) {
       setErrorMsg('An error occurred:', error);
     }
-  };
-
-  const statusReset = () => {
-    setTimeout(() => {
-      setSigningStatus('initialStatus');
-      setSubmittingForm(false);
-    }, 1500);
   };
 
   const pageRedirecter = () => {
@@ -123,7 +120,6 @@ function LoginPage() {
           initialValues={initialFormStatus}
           validationSchema={loginSchema}
           onSubmit={function (values, actions) {
-            setSubmittingForm(true);
             loginMethod(values);
             actions.resetForm();
           }}
@@ -173,14 +169,14 @@ function LoginPage() {
                     className="custom-btn-styles"
                     disabled={isSubmitting}
                   >
-                    {signinStatus === 'initialStatus' ? (
+                    {fetchingStatus === 'initialStatus' ? (
                       <CustomBtnInnerContent
                         text="Submit"
                         icon={<LoginIcon />}
                       />
                     ) : null}
 
-                    {signinStatus === 'loadingStatus' ? (
+                    {fetchingStatus === 'loadingStatus' ? (
                       <CustomBtnInnerContent
                         text="Loading"
                         icon={
@@ -194,7 +190,7 @@ function LoginPage() {
                       />
                     ) : null}
 
-                    {signinStatus === 'failedStatus' ? (
+                    {fetchingStatus === 'failedStatus' ? (
                       <CustomBtnInnerContent
                         text="Failed"
                         icon={<UserDeniedIcon />}
