@@ -23,6 +23,7 @@ function LoginPage() {
     failedStatus,
     successStatus
   } = useFormStatusController();
+  const { apiURL, apiSignInRoute } = utilsData;
 
   const [isLoggedIn, setIsLoggedIn] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -31,19 +32,16 @@ function LoginPage() {
   const loginMethod = async ({ email, password }) => {
     try {
       loadingStatus();
-      const response = await fetch(
-        utilsData.apiURL + utilsData.apiSignInRoute,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email,
-            password
-          })
-        }
-      );
+      const response = await fetch(`${apiURL}${apiSignInRoute}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email,
+          password
+        })
+      });
 
       if (response.status === 400) {
         setErrorMsg('Bad Request, please try again later!');
