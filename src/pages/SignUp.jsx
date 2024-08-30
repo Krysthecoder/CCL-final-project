@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { RegisterIcon, HomeIcon, UserDeniedIcon, WelcomeIcon } from '../icons';
 import { utilsData } from '../utils/utilsData';
 import { Form, Formik } from 'formik';
