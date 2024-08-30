@@ -47,7 +47,7 @@ function LoginPage() {
         setErrorMsg('Bad Request, please try again later!');
         failedStatus();
         setIsLoggedIn('unauthorized');
-        console.log('error');
+        throw new Error(`Error loging into account: ${response.error}`);
       } else if (response.status === 401) {
         setErrorMsg('Bad Credentials, please try again!');
         failedStatus();
@@ -57,7 +57,7 @@ function LoginPage() {
         setErrorMsg('Bad Credentials, please try again!');
         failedStatus();
         setIsLoggedIn('unauthorized');
-        console.log('error');
+        throw new Error(`Error loging into account: ${response.error}`);
       } else {
         const json = await response.json();
         if (json.user) {
