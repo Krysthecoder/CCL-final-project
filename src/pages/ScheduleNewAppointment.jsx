@@ -25,8 +25,8 @@ import { useFormStatusController } from '../helpers';
 
 function ScheduleNewAppointment() {
   dayjs.extend(customParseFormat);
-
   const token = localStorage.getItem('fetchedToken');
+  const { apiURL, apiCreatNewAppointment } = utilsData;
   const {
     fetchingStatus,
     submittingForm,
@@ -35,35 +35,32 @@ function ScheduleNewAppointment() {
     successStatus
   } = useFormStatusController();
 
-  async function appointmentCreator({
+  const appointmentCreator = async ({
     title,
     date,
     startTime,
     endTime,
     description
-  }) {
+  }) => {
     loadingStatus();
     startTime = date + ' ' + startTime + ' GMT';
     endTime = date + ' ' + endTime + ' GMT';
     try {
-      const response = await fetch(
-        utilsData.apiURL + utilsData.apiCreatNewAppointment,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-access-token': token
-          },
-          body: JSON.stringify({
-            title,
-            user: localStorage.getItem('userId'),
-            startTime,
-            endTime,
-            description,
-            createdBy: localStorage.getItem('userId')
-          })
-        }
-      );
+      const response = await fetch(`${apiURL}${apiCreatNewAppointment}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        },
+        body: JSON.stringify({
+          title,
+          user: localStorage.getItem('userId'),
+          startTime,
+          endTime,
+          description,
+          createdBy: localStorage.getItem('userId')
+        })
+      });
 
       if (response.status === 400) {
         failedStatus();
@@ -85,7 +82,7 @@ function ScheduleNewAppointment() {
     } catch (error) {
       console.error('An error occurred:', error);
     }
-  }
+  };
 
   const getCurrentTime = () => dayjs().format('YYYY-MM-DDTHH:mm');
 
