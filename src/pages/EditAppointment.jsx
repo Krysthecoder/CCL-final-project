@@ -22,12 +22,13 @@ import { CircularProgress } from '@mui/material';
 import { utilsData } from '../utils/utilsData';
 
 function EditAppointment() {
+  const navigate = useNavigate();
   const location = useLocation();
+  const id = location.state.id;
+  const { apiURL, apiCreatNewAppointment } = utilsData;
   const [apointmentEditStatus, setAppointmentEditStatus] =
     useState('initialStatus');
   const [submittingForm, setSubmittingForm] = useState(false);
-  const navigate = useNavigate();
-  const id = location.state.id;
 
   const appointmentEditor = async ({
     title,
@@ -40,24 +41,21 @@ function EditAppointment() {
     startTime = `${date} ${startTime} GMT`;
     endTime = `${date} ${endTime} GMT`;
     try {
-      const response = await fetch(
-        `${utilsData.apiURL}${utilsData.apiCreatNewAppointment}/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-access-token': localStorage.getItem('fetchedToken')
-          },
-          body: JSON.stringify({
-            title,
-            user: localStorage.getItem('userId'),
-            startTime,
-            endTime,
-            description,
-            createdBy: localStorage.getItem('userId')
-          })
-        }
-      );
+      const response = await fetch(`${apiURL}${apiCreatNewAppointment}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': localStorage.getItem('fetchedToken')
+        },
+        body: JSON.stringify({
+          title,
+          user: localStorage.getItem('userId'),
+          startTime,
+          endTime,
+          description,
+          createdBy: localStorage.getItem('userId')
+        })
+      });
 
       if (response.status === 400) {
         console.log('error', response.error);
