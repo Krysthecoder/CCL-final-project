@@ -1,35 +1,35 @@
 import { useState } from 'react';
 
-export const useStatusReset = () => {
-  const [createApptStatus, setCreateApptStatus] = useState('initialStatus');
+export const useFormStatusController = () => {
+  const [fetchingStatus, setFetchingStatus] = useState('initialStatus');
   const [submittingForm, setSubmittingForm] = useState(false);
 
   const loadingStatus = () => {
-    setCreateApptStatus('loadingStatus');
+    setFetchingStatus('loadingStatus');
     setSubmittingForm(true);
     resetStatus();
   };
 
   const failedStatus = () => {
-    setCreateApptStatus('failedStatus');
+    setFetchingStatus('failedStatus');
     setSubmittingForm(false);
     resetStatus();
   };
 
   const successStatus = () => {
-    setCreateApptStatus('successStatus');
+    setFetchingStatus('successStatus');
     resetStatus();
   };
 
   const resetStatus = () => {
     setTimeout(() => {
-      setCreateApptStatus('initialStatus');
+      setFetchingStatus('initialStatus');
       setSubmittingForm(false);
     }, 1500);
   };
 
   return {
-    createApptStatus,
+    fetchingStatus,
     submittingForm,
     loadingStatus,
     failedStatus,

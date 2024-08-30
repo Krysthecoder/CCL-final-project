@@ -21,19 +21,19 @@ import { TimePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { CircularProgress } from '@mui/material';
-import { useStatusReset } from '../helpers';
+import { useFormStatusController } from '../helpers';
 
 function ScheduleNewAppointment() {
   dayjs.extend(customParseFormat);
 
   const token = localStorage.getItem('fetchedToken');
   const {
-    createApptStatus,
+    fetchingStatus,
     submittingForm,
     loadingStatus,
     failedStatus,
     successStatus
-  } = useStatusReset();
+  } = useFormStatusController();
 
   async function appointmentCreator({
     title,
@@ -236,14 +236,14 @@ function ScheduleNewAppointment() {
                     className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
                     disabled={isSubmitting}
                   >
-                    {createApptStatus === 'initialStatus' ? (
+                    {fetchingStatus === 'initialStatus' ? (
                       <CustomBtnInnerContent
                         text="Submit"
                         icon={<ScheduleIcon />}
                       />
                     ) : null}
 
-                    {createApptStatus === 'loadingStatus' ? (
+                    {fetchingStatus === 'loadingStatus' ? (
                       <CustomBtnInnerContent
                         text="Loading"
                         icon={
@@ -257,14 +257,14 @@ function ScheduleNewAppointment() {
                       />
                     ) : null}
 
-                    {createApptStatus === 'failedStatus' ? (
+                    {fetchingStatus === 'failedStatus' ? (
                       <CustomBtnInnerContent
                         text="Submit"
                         icon={<UserDeniedIcon />}
                       />
                     ) : null}
 
-                    {createApptStatus === 'successStatus' ? (
+                    {fetchingStatus === 'successStatus' ? (
                       <CustomBtnInnerContent
                         text="Appointment Created"
                         icon={<WelcomeIcon />}
