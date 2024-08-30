@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RegisterIcon, HomeIcon, UserDeniedIcon } from '../icons';
+import { RegisterIcon, HomeIcon, UserDeniedIcon, WelcomeIcon } from '../icons';
 import { utilsData } from '../utils/utilsData';
 import { Form, Formik } from 'formik';
 import { signupSchema } from '../schemas';
@@ -11,8 +11,13 @@ import { useFormStatusController } from '../helpers';
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const { fetchingStatus, submittingForm, loadingStatus, failedStatus } =
-    useFormStatusController();
+  const {
+    fetchingStatus,
+    submittingForm,
+    loadingStatus,
+    failedStatus,
+    successStatus
+  } = useFormStatusController();
 
   const createUser = async ({ firstName, lastName, email, password }) => {
     try {
@@ -37,7 +42,11 @@ export default function SignUp() {
         failedStatus();
         throw new Error('Bad Request, please try again later');
       } else {
+        successStatus();
         const json = await response.json();
+        if (json.user) {
+          window.localStorage.setItem('userName', json.user.firstName);
+        }
         if (json.token.length > 0) {
           window.localStorage.setItem('fetchedToken', json.token);
         }
@@ -167,6 +176,13 @@ export default function SignUp() {
                         }}
                       />
                     }
+                  />
+                ) : null}
+
+                {fetchingStatus === 'successStatus' ? (
+                  <CustomBtnInnerContent
+                    text="Welcome"
+                    icon={<WelcomeIcon />}
                   />
                 ) : null}
 
