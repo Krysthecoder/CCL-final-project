@@ -6,17 +6,17 @@ import { signupSchema } from '../schemas';
 import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
 import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
-
 import { CustomInput } from '../components/CustomInput';
+import { useFormStatusController } from '../helpers';
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const [signupStatus, setSignupStatus] = useState('initialStatus');
-  const [submittingForm, setSubmittingForm] = useState(false);
+  const { fetchingStatus, submittingForm, loadingStatus, failedStatus } =
+    useFormStatusController();
 
   const createUser = async ({ firstName, lastName, email, password }) => {
     try {
-      setSignupStatus('loadingStatus');
+      loadingStatus();
       const response = await fetch(
         utilsData.apiURL + utilsData.apiSignUpRoute,
         {
@@ -34,9 +34,8 @@ export default function SignUp() {
       );
 
       if (response.status === 400) {
-        setSignupStatus('failedStatus');
-        console.log('Bad Request, please try again later');
-        statusReset();
+        failedStatus();
+        throw new Error('Bad Request, please try again later');
       } else {
         const json = await response.json();
         if (json.token.length > 0) {
@@ -50,13 +49,6 @@ export default function SignUp() {
     } catch (error) {
       console.log('An error occurred:', error);
     }
-  };
-
-  const statusReset = () => {
-    setTimeout(() => {
-      setSignupStatus('initialStatus');
-      setSubmittingForm(false);
-    }, 1500);
   };
 
   const pageRedirecter = () => {
@@ -86,7 +78,6 @@ export default function SignUp() {
         initialValues={initialFormStatus}
         validationSchema={signupSchema}
         onSubmit={function (values, actions) {
-          setSubmittingForm(true);
           createUser(values);
           actions.resetForm();
         }}
@@ -158,14 +149,14 @@ export default function SignUp() {
                 type="submit"
                 className="custom-btn-styles w-5/12 md:w-auto lg:w-6/12 lg:py-4"
               >
-                {signupStatus === 'initialStatus' ? (
+                {fetchingStatus === 'initialStatus' ? (
                   <CustomBtnInnerContent
                     text="Sign-Up"
                     icon={<RegisterIcon />}
                   />
                 ) : null}
 
-                {signupStatus === 'loadingStatus' ? (
+                {fetchingStatus === 'loadingStatus' ? (
                   <CustomBtnInnerContent
                     text="Loading"
                     icon={
@@ -179,7 +170,7 @@ export default function SignUp() {
                   />
                 ) : null}
 
-                {signupStatus === 'failedStatus' ? (
+                {fetchingStatus === 'failedStatus' ? (
                   <CustomBtnInnerContent
                     text="Failed"
                     icon={<UserDeniedIcon />}
