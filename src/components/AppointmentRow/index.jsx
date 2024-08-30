@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { styled } from '@mui/material/styles';
 import TableRow from '@mui/material/TableRow';
@@ -15,7 +14,7 @@ const AppointmentRow = ({ row, i }) => {
   const [rowDeleted, setRowDeleted] = useState('');
   const { apiURL, apiDeleteAppointment } = utilsData;
 
-  const reouteState = {
+  const routeState = {
     id: row.id,
     title: row.title,
     startTime: row.startTime,
@@ -100,17 +99,15 @@ const AppointmentRow = ({ row, i }) => {
           <StyledTableCell align="center">
             {deletingStatus === 'initial' ? (
               <div className="flex flex-row  justify-around">
-                <Link
-                  to={'/EditAppointment'}
-                  className="flex items-center"
-                  state={reouteState}
-                >
-                  <ButtonWithIcon
-                    key={i}
-                    btnClassName="hover:scale-110 ease-in-out"
-                    IconComp={<EditIcon />}
-                  />
-                </Link>
+                <ButtonWithIcon
+                  key={i}
+                  linkType={true}
+                  linkRoute={'/EditAppointment'}
+                  linkClassName="flex items-center"
+                  linkState={routeState}
+                  btnClassName="hover:scale-110 ease-in-out"
+                  IconComp={<EditIcon />}
+                />
                 <ButtonWithIcon
                   key={i}
                   btnCaption=""

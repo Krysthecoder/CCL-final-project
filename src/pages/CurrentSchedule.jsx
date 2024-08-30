@@ -7,11 +7,11 @@ import AppointmentsTable from '../components/AppointmentsTable/Index';
 
 function CurrentSchedule() {
   const [currentAppts, setCurrentAppts] = useState([]);
+  const { apiURL, apiAppointments } = utilsData;
 
   async function appointmentsGetter() {
-    const url = utilsData.apiURL + utilsData.apiGetCurrentAppointments;
     const token = window.localStorage.getItem('fetchedToken');
-    await fetch(url, {
+    await fetch(`${apiURL}${apiAppointments}`, {
       method: 'GET',
       headers: {
         'x-access-token': token

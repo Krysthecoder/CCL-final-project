@@ -11,6 +11,7 @@ import { useFormStatusController } from '../helpers';
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const { apiURL, apiSignUpRoute } = utilsData;
   const {
     fetchingStatus,
     submittingForm,
@@ -22,50 +23,39 @@ export default function SignUp() {
   const createUser = async ({ firstName, lastName, email, password }) => {
     try {
       loadingStatus();
-      const response = await fetch(
-        utilsData.apiURL + utilsData.apiSignUpRoute,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            firstName,
-            lastName,
-            email,
-            password
-          })
-        }
-      );
+      const response = await fetch(`${apiURL}${apiSignUpRoute}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password
+        })
+      });
 
       if (response.status === 400) {
         failedStatus();
         throw new Error('Bad Request, please try again later');
-      } else {
-        successStatus();
-        const json = await response.json();
-        if (json.user) {
-          window.localStorage.setItem('userName', json.user.firstName);
-        }
-        if (json.token.length > 0) {
-          window.localStorage.setItem('fetchedToken', json.token);
-        }
-        if (json.user._id.length > 0) {
-          localStorage.setItem('userId', json.user._id);
-        }
-        pageRedirecter();
       }
-    } catch (error) {
-      console.log('An error occurred:', error);
-    }
-  };
 
-  const pageRedirecter = () => {
-    setTimeout(() => {
+      successStatus();
+      const json = await response.json();
+      if (json.user) {
+        localStorage.setItem('userId', json.user._id);
+        localStorage.setItem('userName', json.user.firstName);
+      }
+      if (json.token) {
+        localStorage.setItem('fetchedToken', json.token);
+      }
       navigate({
         pathname: '/CurrentSchedule'
       });
-    }, 1500);
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
   };
 
   const initialFormStatus = {
