@@ -21,13 +21,19 @@ import { TimePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { CircularProgress } from '@mui/material';
+import { useStatusReset } from '../helpers';
 
 function ScheduleNewAppointment() {
   dayjs.extend(customParseFormat);
 
   const token = localStorage.getItem('fetchedToken');
-  const [createApptStatus, setCreateApptStatus] = useState('initialStatus');
-  const [submittingForm, setSubmittingForm] = useState(false);
+  const {
+    createApptStatus,
+    submittingForm,
+    loadingStatus,
+    failedStatus,
+    successStatus
+  } = useStatusReset();
 
   async function appointmentCreator({
     title,
@@ -36,7 +42,7 @@ function ScheduleNewAppointment() {
     endTime,
     description
   }) {
-    setCreateApptStatus('loadingStatus');
+    loadingStatus();
     startTime = date + ' ' + startTime + ' GMT';
     endTime = date + ' ' + endTime + ' GMT';
     try {
@@ -60,40 +66,26 @@ function ScheduleNewAppointment() {
       );
 
       if (response.status === 400) {
-        console.log('error', response.error);
-        setCreateApptStatus('failedStatus');
-        statusReset();
-        return;
+        failedStatus();
+        throw new Error(`Error creating appointment: ${response.error}`);
       }
 
       if (response.status === 401) {
-        setCreateApptStatus('failedStatus');
-        console.log('error');
-        statusReset();
-        return;
+        failedStatus();
+        throw new Error(`Error creating appointment: ${response.error}`);
       }
 
       if (response.status === 404) {
-        setCreateApptStatus('failedStatus');
-        console.log('error');
-        statusReset();
-        return;
+        failedStatus();
+        throw new Error(`Error creating appointment: ${response.error}`);
       }
 
-      setCreateApptStatus('successStatus');
-      statusReset();
+      successStatus();
       return;
     } catch (error) {
       console.error('An error occurred:', error);
     }
   }
-
-  const statusReset = () => {
-    setTimeout(() => {
-      setCreateApptStatus('initialStatus');
-      setSubmittingForm(false);
-    }, 1500);
-  };
 
   const getCurrentTime = () => dayjs().format('YYYY-MM-DDTHH:mm');
 
@@ -180,7 +172,6 @@ function ScheduleNewAppointment() {
                           label="Select the date"
                           value={dayjs(props.values.date)}
                           onChange={(newValue) => {
-                            console.log({ newValue, values: props.values });
                             props.values.date = dayjs(newValue.$d).format(
                               'ddd, DD MMM YYYY'
                             );
