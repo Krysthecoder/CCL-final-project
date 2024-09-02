@@ -8,7 +8,7 @@ import { TrashIcon, EditIcon } from '../../icons';
 import ButtonWithIcon from '../ButtonWithIcon';
 import { CircularProgress } from '@mui/material';
 import { utilsData } from '../../utils/utilsData';
-import PropTypes, { number, object } from 'prop-types';
+import PropTypes from 'prop-types';
 
 const AppointmentRow = ({ row, i }) => {
   const [deletingStatus, setDeletingStatus] = useState('initial');
