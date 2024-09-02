@@ -8,6 +8,7 @@ import { TrashIcon, EditIcon } from '../../icons';
 import ButtonWithIcon from '../ButtonWithIcon';
 import { CircularProgress } from '@mui/material';
 import { utilsData } from '../../utils/utilsData';
+import PropTypes, { number, object } from 'prop-types';
 
 const AppointmentRow = ({ row, i }) => {
   const [deletingStatus, setDeletingStatus] = useState('initial');
@@ -142,6 +143,11 @@ const AppointmentRow = ({ row, i }) => {
       ) : null}
     </>
   );
+};
+
+AppointmentRow.propTypes = {
+  row: PropTypes.object,
+  i: PropTypes.number
 };
 
 export default AppointmentRow;
