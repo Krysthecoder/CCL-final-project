@@ -8,8 +8,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import AppointmentRow from '../AppointmentRow';
+import PropTypes from 'prop-types';
 
-export default function AppointmentsTable({ rowData }) {
+const AppointmentsTable = ({ rowData }) => {
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: '#0284c7',
@@ -57,4 +58,10 @@ export default function AppointmentsTable({ rowData }) {
       </TableContainer>
     </Paper>
   );
-}
+};
+
+AppointmentsTable.propTypes = {
+  rowData: PropTypes.array
+};
+
+export default AppointmentsTable;
