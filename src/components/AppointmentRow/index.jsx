@@ -9,11 +9,13 @@ import ButtonWithIcon from '../ButtonWithIcon';
 import { CircularProgress } from '@mui/material';
 import { utilsData } from '../../utils/utilsData';
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 
 const AppointmentRow = ({ row, i }) => {
   const [deletingStatus, setDeletingStatus] = useState('initial');
   const [rowDeleted, setRowDeleted] = useState('');
   const { apiURL, apiAppointments } = utilsData;
+  const tableCellKey = uuidv4();
 
   const routeState = {
     id: row.id,
@@ -75,25 +77,30 @@ const AppointmentRow = ({ row, i }) => {
     <>
       {rowDeleted !== 'removed' ? (
         <StyledTableRow
-          key={i}
+          key={tableCellKey}
           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
         >
-          <StyledTableCell component="th" align="center" scope="row">
+          <StyledTableCell
+            component="th"
+            align="center"
+            scope="row"
+            key={tableCellKey}
+          >
             {row.title}
           </StyledTableCell>
-          <StyledTableCell align="center">
+          <StyledTableCell align="center" key={tableCellKey}>
             {timeExtractor(row.startTime)}
           </StyledTableCell>
-          <StyledTableCell align="center">
+          <StyledTableCell align="center" key={tableCellKey}>
             {timeExtractor(row.endTime)}
           </StyledTableCell>
-          <StyledTableCell align="center">
+          <StyledTableCell align="center" key={tableCellKey}>
             {dayjs(dateExtractor(row.startTime)).format('ddd, DD MMM YYYY')}
           </StyledTableCell>
-          <StyledTableCell align="center">
+          <StyledTableCell align="center" key={tableCellKey}>
             {row?.user?.firstName ?? '--'}
           </StyledTableCell>
-          <StyledTableCell align="center">
+          <StyledTableCell align="center" key={tableCellKey}>
             {row.description || '--'}
           </StyledTableCell>
 
@@ -101,7 +108,7 @@ const AppointmentRow = ({ row, i }) => {
             {deletingStatus === 'initial' ? (
               <div className="flex flex-row  justify-around">
                 <ButtonWithIcon
-                  key={i}
+                  key={tableCellKey}
                   linkType={true}
                   linkRoute={'/EditAppointment'}
                   linkClassName="flex items-center"
@@ -110,7 +117,7 @@ const AppointmentRow = ({ row, i }) => {
                   IconComp={<EditIcon />}
                 />
                 <ButtonWithIcon
-                  key={i}
+                  key={tableCellKey}
                   btnCaption=""
                   btnClassName="hover:scale-110 ease-in-out"
                   IconComp={<TrashIcon />}
@@ -123,7 +130,7 @@ const AppointmentRow = ({ row, i }) => {
             ) : null}
             {deletingStatus === 'deleting' ? (
               <ButtonWithIcon
-                key={i}
+                key={tableCellKey}
                 btnCaption=""
                 btnClassName="hover:scale-110 ease-in-out"
                 IconComp={

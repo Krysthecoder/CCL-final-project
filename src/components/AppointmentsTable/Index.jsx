@@ -50,8 +50,8 @@ const AppointmentsTable = ({ rowData }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rowData.map((row, i) => (
-              <AppointmentRow row={row} i={i} />
+            {rowData.map((row) => (
+              <AppointmentRow row={row} />
             ))}
           </TableBody>
         </Table>
