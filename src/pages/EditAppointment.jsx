@@ -6,7 +6,7 @@ import {
   UserDeniedIcon,
   WelcomeIcon
 } from '../icons';
-import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
+import { CustomBtnInnerContent } from '../components/CustomBtns';
 import ButtonWithIcon from '../components/ButtonWithIcon';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
