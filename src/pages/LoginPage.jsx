@@ -11,7 +11,8 @@ import {
 } from '../icons';
 import { loginSchema } from '../schemas';
 import { CircularProgress } from '@mui/material';
-import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
+import ButtonWithIcon from '../components/ButtonWithIcon';
+import { CustomBtnInnerContent } from '../components/CustomBtns';
 import { CustomInput } from '../components/CustomInput';
 import { useFormStatusController } from '../helpers';
 
@@ -154,11 +155,11 @@ function LoginPage() {
               )}
 
               <div className="flex justify-between mt-6">
-                <CustomLinkBtn
-                  path={'/SignUp'}
-                  className={'custom-btn-styles'}
-                  text="Sign-up"
-                  icon={<CircledUptArrow />}
+                <ButtonWithIcon
+                  linkRoute={'/SignUp'}
+                  linkClassName={'custom-btn-styles'}
+                  IconComp={<CircledUptArrow />}
+                  btnCaption="Sign-up"
                 />
 
                 {isLoggedIn !== 'authorized' ? (

@@ -6,7 +6,8 @@ import {
   UserDeniedIcon,
   WelcomeIcon
 } from '../icons';
-import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
+import ButtonWithIcon from '../components/ButtonWithIcon';
+import { CustomBtnInnerContent } from '../components/CustomBtns';
 import { Form, Formik } from 'formik';
 import { CustomInput } from '../components/CustomInput';
 import { createAppoitmentSchema } from '../schemas';
@@ -220,11 +221,11 @@ function ScheduleNewAppointment() {
                 </div>
 
                 <div className="flex">
-                  <CustomLinkBtn
-                    path={'../CurrentSchedule'}
-                    className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
-                    text={'Go Back'}
-                    icon={<GoBackIcon />}
+                  <ButtonWithIcon
+                    linkRoute={'../CurrentSchedule'}
+                    linkClassName="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
+                    IconComp={<GoBackIcon />}
+                    btnCaption={'Go Back'}
                     disabled={isSubmitting}
                   />
 

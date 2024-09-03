@@ -7,6 +7,7 @@ import {
   WelcomeIcon
 } from '../icons';
 import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
+import ButtonWithIcon from '../components/ButtonWithIcon';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
@@ -223,11 +224,12 @@ function EditAppointment() {
                 </div>
 
                 <div className="flex">
-                  <CustomLinkBtn
-                    path={'../CurrentSchedule'}
-                    className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
-                    text={'Go Back'}
-                    icon={<GoBackIcon />}
+                  <ButtonWithIcon
+                    linkType={true}
+                    linkRoute={'../CurrentSchedule'}
+                    linkClassName="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
+                    IconComp={<GoBackIcon />}
+                    btnCaption={'Go Back'}
                     disabled={isSubmitting}
                   />
 

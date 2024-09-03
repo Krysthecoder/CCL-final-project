@@ -3,7 +3,8 @@ import { RegisterIcon, HomeIcon, UserDeniedIcon, WelcomeIcon } from '../icons';
 import { utilsData } from '../utils/utilsData';
 import { Form, Formik } from 'formik';
 import { signupSchema } from '../schemas';
-import { CustomBtnInnerContent, CustomLinkBtn } from '../components/CustomBtns';
+import ButtonWithIcon from '../components/ButtonWithIcon';
+import { CustomBtnInnerContent } from '../components/CustomBtns';
 import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { CustomInput } from '../components/CustomInput';
@@ -135,13 +136,13 @@ export default function SignUp() {
             />
 
             <div className="flex justify-between mt-6">
-              <CustomLinkBtn
-                path={'/'}
-                className={
+              <ButtonWithIcon
+                linkRoute={'/'}
+                linkClassName={
                   'custom-btn-styles w-5/12 md:w-auto lg:w-5/12 lg:py-4'
                 }
-                text="Go-Back"
-                icon={<HomeIcon />}
+                IconComp={<HomeIcon />}
+                btnCaption="Go-Back"
               />
 
               <button

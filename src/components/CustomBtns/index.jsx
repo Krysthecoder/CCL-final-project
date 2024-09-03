@@ -13,20 +13,6 @@ export const CustomBtn = ({
   );
 };
 
-export const CustomLinkBtn = ({
-  path = '/',
-  className = 'custom-btn-styles',
-  text = 'This need a caption',
-  icon = ExclamationIcon
-}) => {
-  return (
-    <Link to={path} className={className}>
-      <span>{text}</span>
-      {icon}
-    </Link>
-  );
-};
-
 export const CustomBtnInnerContent = ({
   text = 'This need a caption',
   icon = ExclamationIcon
