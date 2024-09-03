@@ -9,7 +9,7 @@ import {
 import ButtonWithIcon from '../components/ButtonWithIcon';
 import { CustomBtnInnerContent } from '../components/CustomBtns';
 import { Form, Formik } from 'formik';
-import { CustomInput } from '../components/CustomInput';
+import CustomInput from '../components/CustomInput';
 import { createAppoitmentSchema } from '../schemas';
 import { utilsData } from '../utils/utilsData';
 import 'react-calendar/dist/Calendar.css';

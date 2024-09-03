@@ -13,7 +13,7 @@ import { loginSchema } from '../schemas';
 import { CircularProgress } from '@mui/material';
 import ButtonWithIcon from '../components/ButtonWithIcon';
 import { CustomBtnInnerContent } from '../components/CustomBtns';
-import { CustomInput } from '../components/CustomInput';
+import CustomInput from '../components/CustomInput';
 import { useFormStatusController } from '../helpers';
 
 function LoginPage() {

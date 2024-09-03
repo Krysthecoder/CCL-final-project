@@ -7,7 +7,7 @@ import ButtonWithIcon from '../components/ButtonWithIcon';
 import { CustomBtnInnerContent } from '../components/CustomBtns';
 import { useNavigate } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
-import { CustomInput } from '../components/CustomInput';
+import CustomInput from '../components/CustomInput';
 import { useFormStatusController } from '../helpers';
 
 export default function SignUp() {

@@ -1,9 +1,8 @@
 import React from 'react';
 import { useField } from 'formik';
-
 import TextField from '@mui/material/TextField';
 
-export const CustomInput = ({ name, label, multiline, rows, ...props }) => {
+const CustomInput = ({ name, label, multiline, rows, ...props }) => {
   const [field, meta] = useField(name);
 
   return (
@@ -19,3 +18,5 @@ export const CustomInput = ({ name, label, multiline, rows, ...props }) => {
     />
   );
 };
+
+export default CustomInput;
