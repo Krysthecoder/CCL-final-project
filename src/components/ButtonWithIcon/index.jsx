@@ -16,6 +16,7 @@ const ButtonWithIcon = ({
     <>
       {linkType ? (
         <Link to={linkRoute} className={linkClassName} state={linkState}>
+          <span>{btnCaption}</span>
           {IconComp}
         </Link>
       ) : (
