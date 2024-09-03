@@ -222,6 +222,7 @@ function ScheduleNewAppointment() {
 
                 <div className="flex">
                   <ButtonWithIcon
+                    linkType={true}
                     linkRoute={'../CurrentSchedule'}
                     linkClassName="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
                     IconComp={<GoBackIcon />}

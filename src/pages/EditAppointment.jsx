@@ -6,8 +6,8 @@ import {
   UserDeniedIcon,
   WelcomeIcon
 } from '../icons';
-import { CustomBtnInnerContent } from '../components/CustomBtns';
 import ButtonWithIcon from '../components/ButtonWithIcon';
+import { CustomBtnInnerContent } from '../components/CustomBtns';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
@@ -227,7 +227,9 @@ function EditAppointment() {
                   <ButtonWithIcon
                     linkType={true}
                     linkRoute={'../CurrentSchedule'}
-                    linkClassName="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
+                    linkClassName={
+                      'custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4'
+                    }
                     IconComp={<GoBackIcon />}
                     btnCaption={'Go Back'}
                     disabled={isSubmitting}

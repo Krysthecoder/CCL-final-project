@@ -156,6 +156,7 @@ function LoginPage() {
 
               <div className="flex justify-between mt-6">
                 <ButtonWithIcon
+                  linkType={true}
                   linkRoute={'/SignUp'}
                   linkClassName={'custom-btn-styles'}
                   IconComp={<CircledUptArrow />}

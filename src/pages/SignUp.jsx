@@ -137,6 +137,7 @@ export default function SignUp() {
 
             <div className="flex justify-between mt-6">
               <ButtonWithIcon
+                linkType={true}
                 linkRoute={'/'}
                 linkClassName={
                   'custom-btn-styles w-5/12 md:w-auto lg:w-5/12 lg:py-4'
