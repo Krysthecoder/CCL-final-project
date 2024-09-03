@@ -11,11 +11,11 @@ import { utilsData } from '../../utils/utilsData';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 
-const AppointmentRow = ({ row, i }) => {
+const AppointmentRow = ({ row }) => {
   const [deletingStatus, setDeletingStatus] = useState('initial');
   const [rowDeleted, setRowDeleted] = useState('');
   const { apiURL, apiAppointments } = utilsData;
-  const tableCellKey = uuidv4();
+  const keyGenerator = uuidv4();
 
   const routeState = {
     id: row.id,
@@ -77,30 +77,25 @@ const AppointmentRow = ({ row, i }) => {
     <>
       {rowDeleted !== 'removed' ? (
         <StyledTableRow
-          key={tableCellKey}
+          key={uuidv4()}
           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
         >
-          <StyledTableCell
-            component="th"
-            align="center"
-            scope="row"
-            key={tableCellKey}
-          >
+          <StyledTableCell component="th" align="center" scope="row">
             {row.title}
           </StyledTableCell>
-          <StyledTableCell align="center" key={tableCellKey}>
+          <StyledTableCell align="center">
             {timeExtractor(row.startTime)}
           </StyledTableCell>
-          <StyledTableCell align="center" key={tableCellKey}>
+          <StyledTableCell align="center">
             {timeExtractor(row.endTime)}
           </StyledTableCell>
-          <StyledTableCell align="center" key={tableCellKey}>
+          <StyledTableCell align="center">
             {dayjs(dateExtractor(row.startTime)).format('ddd, DD MMM YYYY')}
           </StyledTableCell>
-          <StyledTableCell align="center" key={tableCellKey}>
+          <StyledTableCell align="center">
             {row?.user?.firstName ?? '--'}
           </StyledTableCell>
-          <StyledTableCell align="center" key={tableCellKey}>
+          <StyledTableCell align="center">
             {row.description || '--'}
           </StyledTableCell>
 
@@ -108,7 +103,7 @@ const AppointmentRow = ({ row, i }) => {
             {deletingStatus === 'initial' ? (
               <div className="flex flex-row  justify-around">
                 <ButtonWithIcon
-                  key={tableCellKey}
+                  key={uuidv4()}
                   linkType={true}
                   linkRoute={'/EditAppointment'}
                   linkClassName="flex items-center"
@@ -117,7 +112,7 @@ const AppointmentRow = ({ row, i }) => {
                   IconComp={<EditIcon />}
                 />
                 <ButtonWithIcon
-                  key={tableCellKey}
+                  key={uuidv4()}
                   btnCaption=""
                   btnClassName="hover:scale-110 ease-in-out"
                   IconComp={<TrashIcon />}
@@ -130,7 +125,7 @@ const AppointmentRow = ({ row, i }) => {
             ) : null}
             {deletingStatus === 'deleting' ? (
               <ButtonWithIcon
-                key={tableCellKey}
+                key={uuidv4()}
                 btnCaption=""
                 btnClassName="hover:scale-110 ease-in-out"
                 IconComp={

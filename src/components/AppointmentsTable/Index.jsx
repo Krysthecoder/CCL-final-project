@@ -9,6 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import AppointmentRow from '../AppointmentRow';
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 
 const AppointmentsTable = ({ rowData }) => {
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -51,7 +52,7 @@ const AppointmentsTable = ({ rowData }) => {
           </TableHead>
           <TableBody>
             {rowData.map((row) => (
-              <AppointmentRow row={row} />
+              <AppointmentRow row={row} key={uuidv4()} />
             ))}
           </TableBody>
         </Table>
