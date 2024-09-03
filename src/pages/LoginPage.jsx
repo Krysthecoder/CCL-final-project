@@ -3,36 +3,31 @@ import img from '../assets/login-doctor-image.jpg';
 import { Form, Formik } from 'formik';
 import { utilsData } from '../utils/utilsData';
 import { useNavigate } from 'react-router-dom';
-import {
-  CircledUptArrow,
-  LoginIcon,
-  UserDeniedIcon,
-  WelcomeIcon
-} from '../icons';
+import { CircledUptArrow, LoginIcon } from '../icons';
 import { loginSchema } from '../schemas';
-import { CircularProgress } from '@mui/material';
 import ButtonWithIcon from '../components/ButtonWithIcon';
 import { CustomBtnInnerContent } from '../components/CustomBtns';
 import CustomInput from '../components/CustomInput';
-import { useFormStatusController } from '../helpers';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import { CloseIcon } from '../icons';
 
 function LoginPage() {
-  const {
-    fetchingStatus,
-    submittingForm,
-    loadingStatus,
-    failedStatus,
-    successStatus
-  } = useFormStatusController();
   const { apiURL, apiSignInRoute } = utilsData;
-
   const [isLoggedIn, setIsLoggedIn] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [snackbarState, setSnackbarState] = React.useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'right'
+  });
+  const [submittingForm, setSubmittingForm] = useState(false);
+  const { vertical, horizontal, open } = snackbarState;
   const navigate = useNavigate();
 
   const loginMethod = async ({ email, password }) => {
     try {
-      loadingStatus();
+      setSubmittingForm(true);
       const response = await fetch(`${apiURL}${apiSignInRoute}`, {
         method: 'POST',
         headers: {
@@ -46,18 +41,18 @@ function LoginPage() {
 
       if (response.status === 400) {
         setErrorMsg('Bad Request, please try again later!');
-        failedStatus();
         setIsLoggedIn('unauthorized');
+        setSubmittingForm(false);
         throw new Error(`Error loging into account: ${response.error}`);
       } else if (response.status === 401) {
         setErrorMsg('Bad Credentials, please try again!');
-        failedStatus();
         setIsLoggedIn('unauthorized');
+        setSubmittingForm(false);
         console.log('error');
       } else if (response.status === 404) {
         setErrorMsg('Bad Credentials, please try again!');
-        failedStatus();
         setIsLoggedIn('unauthorized');
+        setSubmittingForm(false);
         throw new Error(`Error loging into account: ${response.error}`);
       } else {
         const json = await response.json();
@@ -66,11 +61,12 @@ function LoginPage() {
         }
         if (json.token.length > 0) {
           window.localStorage.setItem('fetchedToken', json.token);
-          successStatus();
           console.log('success');
 
           setIsLoggedIn('authorized');
-          pageRedirecter();
+          navigate({
+            pathname: '/CurrentSchedule'
+          });
         }
         if (json.user._id.length > 0) {
           localStorage.setItem('userId', json.user._id);
@@ -81,18 +77,34 @@ function LoginPage() {
     }
   };
 
-  const pageRedirecter = () => {
-    setTimeout(() => {
-      navigate({
-        pathname: '/CurrentSchedule'
-      });
-    }, 1500);
+  const initialFormStatus = {
+    email: 'krysthopher5@gmail.com',
+    password: 'Password2341@'
   };
 
-  const initialFormStatus = {
-    email: '',
-    password: ''
+  const handleClick = () => {
+    setSnackbarState({ open: true, vertical: 'top', horizontal: 'right' });
   };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarState({ open: false, vertical: 'top', horizontal: 'right' });
+  };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (
     <div
@@ -110,6 +122,16 @@ function LoginPage() {
           xl:w-1/3 xl:rounded-xl"
       />
       <div>
+        <Snackbar
+          open={open}
+          anchorOrigin={{ vertical, horizontal }}
+          autoHideDuration={1000}
+          onClose={handleClose}
+          message="Loging In!"
+          action={action}
+          key={vertical + horizontal}
+        />
+
         <h1 className="text-3xl md:text-5xl text-center">Welcome to Dentora</h1>
         <h3 className="text-lg text-center mt-6">
           Please enter your credentials
@@ -120,6 +142,7 @@ function LoginPage() {
           validationSchema={loginSchema}
           onSubmit={function (values, actions) {
             loginMethod(values);
+            handleClick();
             actions.resetForm();
           }}
         >
@@ -163,50 +186,13 @@ function LoginPage() {
                   btnCaption="Sign-up"
                 />
 
-                {isLoggedIn !== 'authorized' ? (
-                  <button
-                    type="submit"
-                    className="custom-btn-styles"
-                    disabled={isSubmitting}
-                  >
-                    {fetchingStatus === 'initialStatus' ? (
-                      <CustomBtnInnerContent
-                        text="Submit"
-                        icon={<LoginIcon />}
-                      />
-                    ) : null}
-
-                    {fetchingStatus === 'loadingStatus' ? (
-                      <CustomBtnInnerContent
-                        text="Loading"
-                        icon={
-                          <CircularProgress
-                            size={20}
-                            sx={{
-                              color: 'white'
-                            }}
-                          />
-                        }
-                      />
-                    ) : null}
-
-                    {fetchingStatus === 'failedStatus' ? (
-                      <CustomBtnInnerContent
-                        text="Failed"
-                        icon={<UserDeniedIcon />}
-                      />
-                    ) : null}
-                  </button>
-                ) : null}
-
-                {isLoggedIn === 'authorized' ? (
-                  <div className="custom-btn-styles">
-                    <CustomBtnInnerContent
-                      text="Welcome Back"
-                      icon={<WelcomeIcon />}
-                    />
-                  </div>
-                ) : null}
+                <button
+                  type="submit"
+                  className="custom-btn-styles"
+                  disabled={isSubmitting}
+                >
+                  <CustomBtnInnerContent text="Submit" icon={<LoginIcon />} />
+                </button>
               </div>
             </Form>
           )}
