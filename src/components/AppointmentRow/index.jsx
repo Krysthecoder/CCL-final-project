@@ -15,7 +15,6 @@ const AppointmentRow = ({ row }) => {
   const [deletingStatus, setDeletingStatus] = useState('initial');
   const [rowDeleted, setRowDeleted] = useState('');
   const { apiURL, apiAppointments } = utilsData;
-  const keyGenerator = uuidv4();
 
   const routeState = {
     id: row.id,
