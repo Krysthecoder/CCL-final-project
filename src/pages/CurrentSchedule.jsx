@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CalendarIcon } from '../icons';
 import NavBar from '../components/NavBar/index';
 import { utilsData } from '../utils/utilsData';
@@ -7,25 +7,26 @@ import ButtonWithIcon from '../components/ButtonWithIcon';
 
 function CurrentSchedule() {
   const [currentAppts, setCurrentAppts] = useState([]);
-  const { apiURL, apiAppointments } = utilsData;
 
-  async function appointmentsGetter() {
-    const token = window.localStorage.getItem('fetchedToken');
-    await fetch(`${apiURL}${apiAppointments}`, {
-      method: 'GET',
-      headers: {
-        'x-access-token': token
-      }
-    })
-      .then((response) =>
-        response.json().then((data) => {
-          setCurrentAppts(data.appointments);
-        })
-      )
-      .catch((err) => console.log('error', err));
-  }
-
-  appointmentsGetter();
+  useEffect(() => {
+    const appointmentsGetter = async () => {
+      const { apiURL, apiAppointments } = utilsData;
+      const token = window.localStorage.getItem('fetchedToken');
+      await fetch(`${apiURL}${apiAppointments}`, {
+        method: 'GET',
+        headers: {
+          'x-access-token': token
+        }
+      })
+        .then((response) =>
+          response.json().then((data) => {
+            setCurrentAppts(data.appointments);
+          })
+        )
+        .catch((err) => console.log('error', err));
+    };
+    appointmentsGetter();
+  }, []);
 
   return (
     <div>
