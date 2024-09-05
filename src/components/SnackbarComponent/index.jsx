@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import { CloseIcon } from '../../icons';
+import PropTypes from 'prop-types';
 
 const SnackbarComponent = ({ isOpen = false, snackbarCaption }) => {
   const [snackbarState, setSnackbarState] = useState({
@@ -54,6 +55,11 @@ const SnackbarComponent = ({ isOpen = false, snackbarCaption }) => {
       />
     </div>
   );
+};
+
+SnackbarComponent.propTypes = {
+  isOpen: PropTypes.bool,
+  snackbarCaption: PropTypes.string
 };
 
 export default SnackbarComponent;
