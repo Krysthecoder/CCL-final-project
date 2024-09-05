@@ -8,26 +8,23 @@ import { loginSchema } from '../schemas';
 import ButtonWithIcon from '../components/ButtonWithIcon';
 import { CustomBtnInnerContent } from '../components/CustomBtns';
 import CustomInput from '../components/CustomInput';
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
-import { CloseIcon } from '../icons';
+import SnackbarComponent from '../components/SnackbarComponent';
 
 function LoginPage() {
   const { apiURL, apiSignInRoute } = utilsData;
   const [isLoggedIn, setIsLoggedIn] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [snackbarState, setSnackbarState] = React.useState({
-    open: false,
-    vertical: 'top',
-    horizontal: 'right'
-  });
   const [submittingForm, setSubmittingForm] = useState(false);
-  const { vertical, horizontal, open } = snackbarState;
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
   const navigate = useNavigate();
 
   const loginMethod = async ({ email, password }) => {
     try {
       setSubmittingForm(true);
+
+      setSnackbarOpen(true);
       const response = await fetch(`${apiURL}${apiSignInRoute}`, {
         method: 'POST',
         headers: {
@@ -82,30 +79,6 @@ function LoginPage() {
     password: 'Password2341@'
   };
 
-  const handleClick = () => {
-    setSnackbarState({ open: true, vertical: 'top', horizontal: 'right' });
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarState({ open: false, vertical: 'top', horizontal: 'right' });
-  };
-
-  const action = (
-    <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
   return (
     <div
       className="
@@ -122,15 +95,7 @@ function LoginPage() {
           xl:w-1/3 xl:rounded-xl"
       />
       <div>
-        <Snackbar
-          open={open}
-          anchorOrigin={{ vertical, horizontal }}
-          autoHideDuration={1000}
-          onClose={handleClose}
-          message="Loging In!"
-          action={action}
-          key={vertical + horizontal}
-        />
+        <SnackbarComponent isOpen={snackbarOpen} snackbarCaption={'Loading!'} />
 
         <h1 className="text-3xl md:text-5xl text-center">Welcome to Dentora</h1>
         <h3 className="text-lg text-center mt-6">
@@ -142,7 +107,6 @@ function LoginPage() {
           validationSchema={loginSchema}
           onSubmit={function (values, actions) {
             loginMethod(values);
-            handleClick();
             actions.resetForm();
           }}
         >
