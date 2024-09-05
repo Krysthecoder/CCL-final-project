@@ -7,26 +7,27 @@ import ButtonWithIcon from '../components/ButtonWithIcon';
 
 function CurrentSchedule() {
   const [currentAppts, setCurrentAppts] = useState([]);
+  const { apiURL, apiAppointments } = utilsData;
+
+  const appointmentsGetter = async () => {
+    const token = window.localStorage.getItem('fetchedToken');
+    await fetch(`${apiURL}${apiAppointments}`, {
+      method: 'GET',
+      headers: {
+        'x-access-token': token
+      }
+    })
+      .then((response) =>
+        response.json().then((data) => {
+          setCurrentAppts(data.appointments);
+        })
+      )
+      .catch((err) => console.log('error', err));
+  };
 
   useEffect(() => {
-    const appointmentsGetter = async () => {
-      const { apiURL, apiAppointments } = utilsData;
-      const token = window.localStorage.getItem('fetchedToken');
-      await fetch(`${apiURL}${apiAppointments}`, {
-        method: 'GET',
-        headers: {
-          'x-access-token': token
-        }
-      })
-        .then((response) =>
-          response.json().then((data) => {
-            setCurrentAppts(data.appointments);
-          })
-        )
-        .catch((err) => console.log('error', err));
-    };
     appointmentsGetter();
-  }, []);
+  });
 
   return (
     <div>
