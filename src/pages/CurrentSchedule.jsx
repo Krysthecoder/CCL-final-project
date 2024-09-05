@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { CalendarIcon } from '../icons';
 import NavBar from '../components/NavBar/index';
 import { utilsData } from '../utils/utilsData';
 import AppointmentsTable from '../components/AppointmentsTable/Index';
 import ButtonWithIcon from '../components/ButtonWithIcon';
+import useLocalStorage from '../CustomHooks';
 
 function CurrentSchedule() {
   const [currentAppts, setCurrentAppts] = useState([]);
-  const { apiURL, apiAppointments } = utilsData;
+  const { getItem } = useLocalStorage();
+  const token = getItem('fetchedToken');
 
-  const appointmentsGetter = async () => {
-    const token = window.localStorage.getItem('fetchedToken');
-    await fetch(`${apiURL}${apiAppointments}`, {
+  const appointmentsGetter = useCallback(() => {
+    const { apiURL, apiAppointments } = utilsData;
+    fetch(`${apiURL}${apiAppointments}`, {
       method: 'GET',
       headers: {
         'x-access-token': token
@@ -23,11 +25,12 @@ function CurrentSchedule() {
         })
       )
       .catch((err) => console.log('error', err));
-  };
+  }, [token]);
 
   useEffect(() => {
     appointmentsGetter();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>

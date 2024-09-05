@@ -9,12 +9,14 @@ import ButtonWithIcon from '../components/ButtonWithIcon';
 import { CustomBtnInnerContent } from '../components/CustomBtns';
 import CustomInput from '../components/CustomInput';
 import SnackbarComponent from '../components/SnackbarComponent';
+import useLocalStorage from '../CustomHooks';
 
 function LoginPage() {
   const { apiURL, apiSignInRoute } = utilsData;
   const [isLoggedIn, setIsLoggedIn] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [submittingForm, setSubmittingForm] = useState(false);
+  const { setItem } = useLocalStorage();
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
@@ -37,36 +39,35 @@ function LoginPage() {
       });
 
       if (response.status === 400) {
-        setErrorMsg('Bad Request, please try again later!');
+        setErrorMsg(`Error: Bad Request, ${response.status.errorMsg}`);
         setIsLoggedIn('unauthorized');
         setSubmittingForm(false);
         throw new Error(`Error loging into account: ${response.error}`);
       } else if (response.status === 401) {
-        setErrorMsg('Bad Credentials, please try again!');
+        console.log(response.status);
+        setErrorMsg(`Error: Bad Credentials`);
         setIsLoggedIn('unauthorized');
         setSubmittingForm(false);
-        console.log('error');
+        console.error(errorMsg);
       } else if (response.status === 404) {
-        setErrorMsg('Bad Credentials, please try again!');
+        setErrorMsg(`Error: Bad Credentials, ${response.status.errorMsg}`);
         setIsLoggedIn('unauthorized');
         setSubmittingForm(false);
         throw new Error(`Error loging into account: ${response.error}`);
       } else {
         const json = await response.json();
         if (json.user) {
-          window.localStorage.setItem('userName', json.user.firstName);
+          setItem('userName', json.user.firstName);
         }
         if (json.token.length > 0) {
-          window.localStorage.setItem('fetchedToken', json.token);
-          console.log('success');
-
+          setItem('fetchedToken', json.token);
           setIsLoggedIn('authorized');
           navigate({
             pathname: '/CurrentSchedule'
           });
         }
         if (json.user._id.length > 0) {
-          localStorage.setItem('userId', json.user._id);
+          setItem('userId', json.user._id);
         }
       }
     } catch (error) {
