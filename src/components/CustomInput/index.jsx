@@ -1,6 +1,7 @@
 import React from 'react';
 import { useField } from 'formik';
 import TextField from '@mui/material/TextField';
+import PropTypes, { object } from 'prop-types';
 
 const CustomInput = ({ name, label, multiline, rows, ...props }) => {
   const [field, meta] = useField(name);
@@ -17,6 +18,14 @@ const CustomInput = ({ name, label, multiline, rows, ...props }) => {
       className={multiline ? 'w-screen' : 'w-full'}
     />
   );
+};
+
+CustomInput.propTypes = {
+  name: PropTypes.string,
+  label: PropTypes.string,
+  multiline: PropTypes.bool,
+  rows: PropTypes.number,
+  props: PropTypes.object
 };
 
 export default CustomInput;

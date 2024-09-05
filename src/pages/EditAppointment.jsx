@@ -83,7 +83,7 @@ function EditAppointment() {
       pageRedirecter();
       return;
     } catch (error) {
-      console.log('An error occurred:', error);
+      console.error('An error occurred:', error);
     }
   };
 
