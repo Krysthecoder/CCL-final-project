@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { CalendarIcon } from '../icons';
 import NavBar from '../components/NavBar/index';
 import { utilsData } from '../utils/utilsData';
@@ -25,9 +25,7 @@ function CurrentSchedule() {
       .catch((err) => console.log('error', err));
   }
 
-  useEffect(() => {
-    appointmentsGetter();
-  }, []);
+  appointmentsGetter();
 
   return (
     <div>
