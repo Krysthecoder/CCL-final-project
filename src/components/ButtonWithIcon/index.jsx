@@ -22,10 +22,8 @@ const ButtonWithIcon = ({
       ) : (
         <button className={btnClassName} onClick={onClickFn}>
           <div className="flex flex-row justify-around items-center">
-            <div className="col">
-              {btnCaption && <span>{btnCaption}</span>}
-              {IconComp}
-            </div>
+            {btnCaption && <span>{btnCaption}</span>}
+            {IconComp}
           </div>
         </button>
       )}

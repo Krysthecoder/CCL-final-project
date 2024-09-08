@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
-/* delete this one */ import {
-  GoBackIcon,
-  ScheduleIcon,
-  UserDeniedIcon,
-  WelcomeIcon
-} from '../icons';
+import { GoBackIcon, ScheduleIcon } from '../icons';
 
 import ButtonWithIcon from '../components/ButtonWithIcon';
-
-/* delete this one */ import { CustomBtnInnerContent } from '../components/CustomBtns';
 
 import { Form, Formik } from 'formik';
 import CustomInput from '../components/CustomInput';
@@ -25,8 +18,6 @@ import { TimePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import SnackbarComponent from '../components/SnackbarComponent';
-/* delete this one */ import { CircularProgress } from '@mui/material';
-/* delete this one */ import { useFormStatusController } from '../helpers';
 
 function ScheduleNewAppointment() {
   dayjs.extend(customParseFormat);
@@ -35,14 +26,7 @@ function ScheduleNewAppointment() {
   const [initialSnackbarOpen, setInitialSnackbarOpen] = useState(false);
   const [failedSnackbar, setFailedSnackbar] = useState(false);
   const [successSnackbar, setSuccessSnackbar] = useState(false);
-
-  const {
-    fetchingStatus,
-    submittingForm,
-    loadingStatus,
-    failedStatus,
-    successStatus
-  } = useFormStatusController();
+  const [submittingForm, setSubmittingForm] = useState(false);
 
   const appointmentCreator = async ({
     title,
@@ -51,10 +35,10 @@ function ScheduleNewAppointment() {
     endTime,
     description
   }) => {
-    loadingStatus();
     startTime = date + ' ' + startTime + ' GMT';
     endTime = date + ' ' + endTime + ' GMT';
     try {
+      setSubmittingForm(true);
       const response = await fetch(`${apiURL}${apiAppointments}`, {
         method: 'POST',
         headers: {
@@ -72,25 +56,25 @@ function ScheduleNewAppointment() {
       });
 
       if (response.status === 400) {
-        failedStatus();
         setFailedSnackbar(true);
+        setSubmittingForm(false);
         throw new Error(`Error creating appointment: ${response.error}`);
       }
 
       if (response.status === 401) {
-        failedStatus();
         setFailedSnackbar(true);
+        setSubmittingForm(false);
         throw new Error(`Error creating appointment: ${response.error}`);
       }
 
       if (response.status === 404) {
-        failedStatus();
         setFailedSnackbar(true);
+        setSubmittingForm(false);
         throw new Error(`Error creating appointment: ${response.error}`);
       }
 
-      successStatus();
       setSuccessSnackbar(true);
+      setSubmittingForm(false);
       return;
     } catch (error) {
       console.error('An error occurred:', error);
@@ -257,46 +241,14 @@ function ScheduleNewAppointment() {
                     disabled={isSubmitting}
                   />
 
-                  <button
-                    type="submit"
-                    className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
+                  <ButtonWithIcon
+                    btnClassName={
+                      'custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4'
+                    }
                     disabled={isSubmitting}
-                  >
-                    {fetchingStatus === 'initialStatus' ? (
-                      <CustomBtnInnerContent
-                        text="Submit"
-                        icon={<ScheduleIcon />}
-                      />
-                    ) : null}
-
-                    {fetchingStatus === 'loadingStatus' ? (
-                      <CustomBtnInnerContent
-                        text="Loading"
-                        icon={
-                          <CircularProgress
-                            size={20}
-                            sx={{
-                              color: 'white'
-                            }}
-                          />
-                        }
-                      />
-                    ) : null}
-
-                    {fetchingStatus === 'failedStatus' ? (
-                      <CustomBtnInnerContent
-                        text="Submit"
-                        icon={<UserDeniedIcon />}
-                      />
-                    ) : null}
-
-                    {fetchingStatus === 'successStatus' ? (
-                      <CustomBtnInnerContent
-                        text="Appointment Created"
-                        icon={<WelcomeIcon />}
-                      />
-                    ) : null}
-                  </button>
+                    IconComp={<ScheduleIcon />}
+                    btnCaption="Submit"
+                  />
                 </div>
               </Form>
             )}
