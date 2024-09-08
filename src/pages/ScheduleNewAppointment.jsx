@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
-import {
+/* delete this one */ import {
   GoBackIcon,
   ScheduleIcon,
   UserDeniedIcon,
   WelcomeIcon
 } from '../icons';
+
 import ButtonWithIcon from '../components/ButtonWithIcon';
-import { CustomBtnInnerContent } from '../components/CustomBtns';
+
+/* delete this one */ import { CustomBtnInnerContent } from '../components/CustomBtns';
+
 import { Form, Formik } from 'formik';
 import CustomInput from '../components/CustomInput';
 import { createAppoitmentSchema } from '../schemas';
@@ -21,13 +24,18 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { CircularProgress } from '@mui/material';
-import { useFormStatusController } from '../helpers';
+import SnackbarComponent from '../components/SnackbarComponent';
+/* delete this one */ import { CircularProgress } from '@mui/material';
+/* delete this one */ import { useFormStatusController } from '../helpers';
 
 function ScheduleNewAppointment() {
   dayjs.extend(customParseFormat);
   const token = localStorage.getItem('fetchedToken');
   const { apiURL, apiAppointments } = utilsData;
+  const [initialSnackbarOpen, setInitialSnackbarOpen] = useState(false);
+  const [failedSnackbar, setFailedSnackbar] = useState(false);
+  const [successSnackbar, setSuccessSnackbar] = useState(false);
+
   const {
     fetchingStatus,
     submittingForm,
@@ -65,20 +73,24 @@ function ScheduleNewAppointment() {
 
       if (response.status === 400) {
         failedStatus();
+        setFailedSnackbar(true);
         throw new Error(`Error creating appointment: ${response.error}`);
       }
 
       if (response.status === 401) {
         failedStatus();
+        setFailedSnackbar(true);
         throw new Error(`Error creating appointment: ${response.error}`);
       }
 
       if (response.status === 404) {
         failedStatus();
+        setFailedSnackbar(true);
         throw new Error(`Error creating appointment: ${response.error}`);
       }
 
       successStatus();
+      setSuccessSnackbar(true);
       return;
     } catch (error) {
       console.error('An error occurred:', error);
@@ -103,11 +115,26 @@ function ScheduleNewAppointment() {
           <Typography variant="h6">
             Please select from the below options:
           </Typography>
+          <SnackbarComponent
+            isOpen={initialSnackbarOpen}
+            snackbarCaption={'Submitting!'}
+          />
+
+          <SnackbarComponent
+            isOpen={failedSnackbar}
+            snackbarCaption={'Failed, try again!'}
+          />
+
+          <SnackbarComponent
+            isOpen={successSnackbar}
+            snackbarCaption={'Appointment Created!'}
+          />
 
           <Formik
             initialValues={initialFormStatus}
             validationSchema={createAppoitmentSchema}
             onSubmit={function (values, actions) {
+              setInitialSnackbarOpen(true);
               appointmentCreator(values);
               actions.resetForm();
             }}
