@@ -27,7 +27,12 @@ function EditAppointment() {
   const userId = getItem('userId');
 
   const [submittingForm, setSubmittingForm] = useState(false);
+  const [customSnackbarStatus, setCustomSnackbarStatus] = useState({
+    isOpen: false,
+    snackBarCaption: ''
+  });
 
+  const { isOpen, snackBarCaption } = customSnackbarStatus;
   const { apiURL, apiAppointments } = utilsData;
 
   const appointmentEditor = async ({
@@ -38,6 +43,7 @@ function EditAppointment() {
     description
   }) => {
     setSubmittingForm(true);
+    setCustomSnackbarStatus({ isOpen: true, snackBarCaption: 'Editing ...' });
     startTime = `${date} ${startTime} GMT`;
     endTime = `${date} ${endTime} GMT`;
 
@@ -105,6 +111,10 @@ function EditAppointment() {
         <div className="flex flex-col justify-center items-center mt-8 mx-auto lg:mt-20 lg:w-6/12">
           <Typography variant="h6">Please edit yor appointment:</Typography>
 
+          <SnackbarComponent
+            isOpen={isOpen}
+            snackbarCaption={snackBarCaption}
+          />
           <Formik
             initialValues={initialFormStatus}
             validationSchema={editAppointmentSchema}
@@ -238,10 +248,8 @@ function EditAppointment() {
                     disabled={isSubmitting}
                   >
                     <ButtonWithIcon
-                      disabled={isSubmitting}
                       IconComp={<ScheduleIcon />}
                       btnCaption="Submit"
-                      type="submit"
                     />
                   </button>
                 </div>
