@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
+import Typography from '@mui/material/Typography';
 import { GoBackIcon, ScheduleIcon } from '../icons';
-
 import ButtonWithIcon from '../components/ButtonWithIcon';
-
 import { Form, Formik } from 'formik';
-import CustomInput from '../components/CustomInput';
 import { createAppoitmentSchema } from '../schemas';
 import { utilsData } from '../utils/utilsData';
-import 'react-calendar/dist/Calendar.css';
-import Typography from '@mui/material/Typography';
+import CustomInput from '../components/CustomInput';
 import dayjs from 'dayjs';
 import { DemoItem, DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -18,11 +15,14 @@ import { TimePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import SnackbarComponent from '../components/SnackbarComponent';
+import useLocalStorage from '../CustomHooks';
 
 function ScheduleNewAppointment() {
   dayjs.extend(customParseFormat);
-  const token = localStorage.getItem('fetchedToken');
   const { apiURL, apiAppointments } = utilsData;
+  const { getItem } = useLocalStorage();
+  const token = getItem('fetchedToken');
+  const user = getItem('userId');
   const [initialSnackbarOpen, setInitialSnackbarOpen] = useState(false);
   const [failedSnackbar, setFailedSnackbar] = useState(false);
   const [successSnackbar, setSuccessSnackbar] = useState(false);
@@ -37,6 +37,7 @@ function ScheduleNewAppointment() {
   }) => {
     startTime = date + ' ' + startTime + ' GMT';
     endTime = date + ' ' + endTime + ' GMT';
+
     try {
       setSubmittingForm(true);
       const response = await fetch(`${apiURL}${apiAppointments}`, {
@@ -47,11 +48,11 @@ function ScheduleNewAppointment() {
         },
         body: JSON.stringify({
           title,
-          user: localStorage.getItem('userId'),
+          user: user,
           startTime,
           endTime,
           description,
-          createdBy: localStorage.getItem('userId')
+          createdBy: user
         })
       });
 
@@ -248,6 +249,7 @@ function ScheduleNewAppointment() {
                     disabled={isSubmitting}
                     IconComp={<ScheduleIcon />}
                     btnCaption="Submit"
+                    type="submit"
                   />
                 </div>
               </Form>
