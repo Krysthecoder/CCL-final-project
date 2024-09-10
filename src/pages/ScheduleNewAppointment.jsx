@@ -35,8 +35,8 @@ function ScheduleNewAppointment() {
     endTime,
     description
   }) => {
-    startTime = date + ' ' + startTime + ' GMT';
-    endTime = date + ' ' + endTime + ' GMT';
+    startTime = `${date} ${startTime} GMT`;
+    endTime = `${date} ${endTime} GMT`;
 
     try {
       setSubmittingForm(true);
