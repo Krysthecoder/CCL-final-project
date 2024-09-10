@@ -4,10 +4,12 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import LogoutBtn from '../LogOut';
 import { ArrowDown } from '../../icons';
+import useLocalStorage from '../../CustomHooks';
 
 const ProfileMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const { getItem } = useLocalStorage();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -25,7 +27,7 @@ const ProfileMenu = () => {
         onClick={handleClick}
       >
         <span className="flex gap-2 justify-center items-center text-stone-300 capitalize text-lg md:text-2xl">
-          {localStorage.getItem('userName')}
+          {getItem('userName')}
           <ArrowDown />
         </span>
       </Button>
