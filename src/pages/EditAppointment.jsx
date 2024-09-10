@@ -1,13 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
-import {
-  GoBackIcon,
-  ScheduleIcon,
-  UserDeniedIcon,
-  WelcomeIcon
-} from '../icons';
+import { GoBackIcon, ScheduleIcon } from '../icons';
 import ButtonWithIcon from '../components/ButtonWithIcon';
-import { CustomBtnInnerContent } from '../components/CustomBtns';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
@@ -19,9 +13,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { CircularProgress } from '@mui/material';
 import { utilsData } from '../utils/utilsData';
-import { useFormStatusController } from '../helpers';
+import SnackbarComponent from '../components/SnackbarComponent';
 import useLocalStorage from '../CustomHooks';
 
 function EditAppointment() {
@@ -33,14 +26,9 @@ function EditAppointment() {
   const token = getItem('fetchedToken');
   const userId = getItem('userId');
 
+  const [submittingForm, setSubmittingForm] = useState(false);
+
   const { apiURL, apiAppointments } = utilsData;
-  const {
-    fetchingStatus,
-    submittingForm,
-    loadingStatus,
-    failedStatus,
-    successStatus
-  } = useFormStatusController();
 
   const appointmentEditor = async ({
     title,
@@ -49,7 +37,7 @@ function EditAppointment() {
     endTime,
     description
   }) => {
-    loadingStatus();
+    setSubmittingForm(true);
     startTime = `${date} ${startTime} GMT`;
     endTime = `${date} ${endTime} GMT`;
 
@@ -74,21 +62,21 @@ function EditAppointment() {
       );
 
       if (response.status === 400) {
-        failedStatus();
+        setSubmittingForm(false);
         throw new Error(`Error editing appointment: ${response.error}`);
       }
 
       if (response.status === 401) {
-        failedStatus();
+        setSubmittingForm(false);
         throw new Error(`Error editing appointment: ${response.error}`);
       }
 
       if (response.status === 404) {
-        failedStatus();
+        setSubmittingForm(false);
         throw new Error(`Error editing appointment: ${response.error}`);
       }
 
-      successStatus();
+      setSubmittingForm(false);
       pageRedirecter();
       return;
     } catch (error) {
@@ -249,40 +237,12 @@ function EditAppointment() {
                     className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
                     disabled={isSubmitting}
                   >
-                    {fetchingStatus === 'initialStatus' ? (
-                      <CustomBtnInnerContent
-                        text="Submit"
-                        icon={<ScheduleIcon />}
-                      />
-                    ) : null}
-
-                    {fetchingStatus === 'loadingStatus' ? (
-                      <CustomBtnInnerContent
-                        text="Loading"
-                        icon={
-                          <CircularProgress
-                            size={20}
-                            sx={{
-                              color: 'white'
-                            }}
-                          />
-                        }
-                      />
-                    ) : null}
-
-                    {fetchingStatus === 'failedStatus' ? (
-                      <CustomBtnInnerContent
-                        text="Submit"
-                        icon={<UserDeniedIcon />}
-                      />
-                    ) : null}
-
-                    {fetchingStatus === 'successStatus' ? (
-                      <CustomBtnInnerContent
-                        text="Appointment Edited"
-                        icon={<WelcomeIcon />}
-                      />
-                    ) : null}
+                    <ButtonWithIcon
+                      disabled={isSubmitting}
+                      IconComp={<ScheduleIcon />}
+                      btnCaption="Submit"
+                      type="submit"
+                    />
                   </button>
                 </div>
               </Form>

@@ -21,7 +21,7 @@ const ButtonWithIcon = ({
         </Link>
       ) : (
         <button className={btnClassName} onClick={onClickFn}>
-          <div className="flex flex-row justify-around items-center">
+          <div className="flex flex-row justify-around items-center gap-2">
             {btnCaption && <span>{btnCaption}</span>}
             {IconComp}
           </div>
