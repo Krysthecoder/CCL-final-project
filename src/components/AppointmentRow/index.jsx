@@ -10,12 +10,14 @@ import { CircularProgress } from '@mui/material';
 import { utilsData } from '../../utils/utilsData';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
+import useLocalStorage from '../../CustomHooks';
 
 const AppointmentRow = ({ row }) => {
   const [deletingStatus, setDeletingStatus] = useState('initial');
   const [rowDeleted, setRowDeleted] = useState('');
   const { apiURL, apiAppointments } = utilsData;
-
+  const { getItem } = useLocalStorage();
+  const token = getItem('fetchedToken');
   const routeState = {
     id: row.id,
     title: row.title,
@@ -51,7 +53,7 @@ const AppointmentRow = ({ row }) => {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
-            'x-access-token': localStorage.getItem('fetchedToken')
+            'x-access-token': token
           }
         }
       );
