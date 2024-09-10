@@ -22,12 +22,17 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { CircularProgress } from '@mui/material';
 import { utilsData } from '../utils/utilsData';
 import { useFormStatusController } from '../helpers';
+import useLocalStorage from '../CustomHooks';
 
 function EditAppointment() {
   const navigate = useNavigate();
   const location = useLocation();
-  const id = location.state.id;
-  const token = localStorage.getItem('fetchedToken');
+  const { getItem } = useLocalStorage();
+  const appointmentId = location.state.id;
+
+  const token = getItem('fetchedToken');
+  const userId = getItem('userId');
+
   const { apiURL, apiAppointments } = utilsData;
   const {
     fetchingStatus,
@@ -47,22 +52,26 @@ function EditAppointment() {
     loadingStatus();
     startTime = `${date} ${startTime} GMT`;
     endTime = `${date} ${endTime} GMT`;
+
     try {
-      const response = await fetch(`${apiURL}${apiAppointments}/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': token
-        },
-        body: JSON.stringify({
-          title,
-          user: localStorage.getItem('userId'),
-          startTime,
-          endTime,
-          description,
-          createdBy: localStorage.getItem('userId')
-        })
-      });
+      const response = await fetch(
+        `${apiURL}${apiAppointments}/${appointmentId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': token
+          },
+          body: JSON.stringify({
+            title,
+            user: userId,
+            startTime,
+            endTime,
+            description,
+            createdBy: userId
+          })
+        }
+      );
 
       if (response.status === 400) {
         failedStatus();
