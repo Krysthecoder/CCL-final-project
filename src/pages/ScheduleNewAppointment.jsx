@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import Typography from '@mui/material/Typography';
 import { GoBackIcon, ScheduleIcon } from '../icons';
@@ -16,6 +16,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import SnackbarComponent from '../components/SnackbarComponent';
 import useLocalStorage from '../CustomHooks';
+import { duration } from '@mui/material';
 
 function ScheduleNewAppointment() {
   dayjs.extend(customParseFormat);
@@ -23,10 +24,15 @@ function ScheduleNewAppointment() {
   const { getItem } = useLocalStorage();
   const token = getItem('fetchedToken');
   const user = getItem('userId');
-  const [initialSnackbarOpen, setInitialSnackbarOpen] = useState(false);
-  const [failedSnackbar, setFailedSnackbar] = useState(false);
-  const [successSnackbar, setSuccessSnackbar] = useState(false);
+
   const [submittingForm, setSubmittingForm] = useState(false);
+  const [customSnackbarStatus, setCustomSnackbarStatus] = useState({
+    isOpen: false,
+    snackbarCaption: '',
+    duration: 1000
+  });
+
+  useEffect(() => {}, [customSnackbarStatus]);
 
   const appointmentCreator = async ({
     title,
@@ -56,25 +62,22 @@ function ScheduleNewAppointment() {
         })
       });
 
-      if (response.status === 400) {
-        setFailedSnackbar(true);
-        setSubmittingForm(false);
-        throw new Error(`Error creating appointment: ${response.error}`);
-      }
-
-      if (response.status === 401) {
-        setFailedSnackbar(true);
-        setSubmittingForm(false);
-        throw new Error(`Error creating appointment: ${response.error}`);
-      }
-
       if (response.status === 404) {
-        setFailedSnackbar(true);
+        console.log('response status: ', response.status);
         setSubmittingForm(false);
+        setCustomSnackbarStatus({
+          isOpen: true,
+          snackbarCaption: 'Error creating Appointment, please try again.',
+          duration: 3000
+        });
         throw new Error(`Error creating appointment: ${response.error}`);
       }
 
-      setSuccessSnackbar(true);
+      setCustomSnackbarStatus({
+        isOpen: true,
+        snackbarCaption: 'Appointment Created.',
+        duration: 1500
+      });
       setSubmittingForm(false);
       return;
     } catch (error) {
@@ -89,7 +92,7 @@ function ScheduleNewAppointment() {
     date: dayjs(getCurrentTime()),
     startTime: dayjs(getCurrentTime()),
     endTime: dayjs(getCurrentTime()),
-    description: ''
+    description: 'This is a dev test'
   };
 
   return (
@@ -100,26 +103,17 @@ function ScheduleNewAppointment() {
           <Typography variant="h6">
             Please select from the below options:
           </Typography>
-          <SnackbarComponent
-            isOpen={initialSnackbarOpen}
-            snackbarCaption={'Submitting!'}
-          />
 
           <SnackbarComponent
-            isOpen={failedSnackbar}
-            snackbarCaption={'Failed, try again!'}
-          />
-
-          <SnackbarComponent
-            isOpen={successSnackbar}
-            snackbarCaption={'Appointment Created!'}
+            isOpen={customSnackbarStatus.isOpen}
+            snackbarCaption={customSnackbarStatus.snackbarCaption}
+            duration={customSnackbarStatus.duration}
           />
 
           <Formik
             initialValues={initialFormStatus}
             validationSchema={createAppoitmentSchema}
             onSubmit={function (values, actions) {
-              setInitialSnackbarOpen(true);
               appointmentCreator(values);
               actions.resetForm();
             }}

@@ -29,10 +29,10 @@ function EditAppointment() {
   const [submittingForm, setSubmittingForm] = useState(false);
   const [customSnackbarStatus, setCustomSnackbarStatus] = useState({
     isOpen: false,
-    snackBarCaption: ''
+    snackbarCaption: ''
   });
 
-  const { isOpen, snackBarCaption } = customSnackbarStatus;
+  const { isOpen, snackbarCaption } = customSnackbarStatus;
   const { apiURL, apiAppointments } = utilsData;
 
   const appointmentEditor = async ({
@@ -43,7 +43,7 @@ function EditAppointment() {
     description
   }) => {
     setSubmittingForm(true);
-    setCustomSnackbarStatus({ isOpen: true, snackBarCaption: 'Editing ...' });
+    setCustomSnackbarStatus({ isOpen: true, snackbarCaption: 'Editing ...' });
     startTime = `${date} ${startTime} GMT`;
     endTime = `${date} ${endTime} GMT`;
 
@@ -113,7 +113,7 @@ function EditAppointment() {
 
           <SnackbarComponent
             isOpen={isOpen}
-            snackbarCaption={snackBarCaption}
+            snackbarCaption={snackbarCaption}
           />
           <Formik
             initialValues={initialFormStatus}

@@ -4,7 +4,11 @@ import IconButton from '@mui/material/IconButton';
 import { CloseIcon } from '../../icons';
 import PropTypes from 'prop-types';
 
-const SnackbarComponent = ({ isOpen = false, snackbarCaption }) => {
+const SnackbarComponent = ({
+  isOpen = false,
+  snackbarCaption,
+  duration = 1000
+}) => {
   const [snackbarState, setSnackbarState] = useState({
     open: false,
     vertical: 'top',
@@ -47,7 +51,7 @@ const SnackbarComponent = ({ isOpen = false, snackbarCaption }) => {
       <Snackbar
         open={open}
         anchorOrigin={{ vertical, horizontal }}
-        autoHideDuration={1000}
+        autoHideDuration={duration}
         onClose={handleClose}
         message={snackbarCaption}
         action={action}
@@ -59,7 +63,8 @@ const SnackbarComponent = ({ isOpen = false, snackbarCaption }) => {
 
 SnackbarComponent.propTypes = {
   isOpen: PropTypes.bool,
-  snackbarCaption: PropTypes.string
+  snackbarCaption: PropTypes.string,
+  duration: PropTypes.number
 };
 
 export default SnackbarComponent;
