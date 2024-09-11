@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import { GoBackIcon, ScheduleIcon } from '../icons';
 import ButtonWithIcon from '../components/ButtonWithIcon';
@@ -25,15 +25,16 @@ function EditAppointment() {
 
   const token = getItem('fetchedToken');
   const userId = getItem('userId');
+  const { apiURL, apiAppointments } = utilsData;
 
   const [submittingForm, setSubmittingForm] = useState(false);
   const [customSnackbarStatus, setCustomSnackbarStatus] = useState({
     isOpen: false,
-    snackbarCaption: ''
+    snackbarCaption: '',
+    duration: 1000
   });
 
-  const { isOpen, snackbarCaption } = customSnackbarStatus;
-  const { apiURL, apiAppointments } = utilsData;
+  useEffect(() => {}, [customSnackbarStatus]);
 
   const appointmentEditor = async ({
     title,
@@ -67,21 +68,20 @@ function EditAppointment() {
         }
       );
 
-      if (response.status === 400) {
-        setSubmittingForm(false);
-        throw new Error(`Error editing appointment: ${response.error}`);
-      }
-
-      if (response.status === 401) {
-        setSubmittingForm(false);
-        throw new Error(`Error editing appointment: ${response.error}`);
-      }
-
       if (response.status === 404) {
         setSubmittingForm(false);
+        setCustomSnackbarStatus({
+          isOpen: true,
+          snackbarCaption: 'Error creating Appointment, please try again.',
+          duration: 3000
+        });
         throw new Error(`Error editing appointment: ${response.error}`);
       }
-
+      setCustomSnackbarStatus({
+        isOpen: true,
+        snackbarCaption: 'Appointment Created.',
+        duration: 1500
+      });
       setSubmittingForm(false);
       pageRedirecter();
       return;
@@ -112,8 +112,9 @@ function EditAppointment() {
           <Typography variant="h6">Please edit yor appointment:</Typography>
 
           <SnackbarComponent
-            isOpen={isOpen}
-            snackbarCaption={snackbarCaption}
+            isOpen={customSnackbarStatus.isOpen}
+            snackbarCaption={customSnackbarStatus.snackbarCaption}
+            duration={customSnackbarStatus.duration}
           />
           <Formik
             initialValues={initialFormStatus}
