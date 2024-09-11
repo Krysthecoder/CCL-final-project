@@ -16,7 +16,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import SnackbarComponent from '../components/SnackbarComponent';
 import useLocalStorage from '../CustomHooks';
-import { duration } from '@mui/material';
 
 function ScheduleNewAppointment() {
   dayjs.extend(customParseFormat);
