@@ -9,6 +9,8 @@ import LoginPage from './pages/LoginPage';
 import SignUp from './pages/SignUp';
 import CurrentSchedule from './pages/CurrentSchedule';
 import ScheduleNewAppointment from './pages/ScheduleNewAppointment';
+import EditAppointment from './pages/EditAppointment';
+import NotFoundPage from './pages/404Page';
 import ProtectedRoutes from './pages/ProtectedRoutes';
 
 function App() {
@@ -19,6 +21,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LoginPage />} />
             <Route path="/SignUp" element={<SignUp />} />
+            <Route path="/404Page" element={<NotFoundPage />} />
 
             <Route element={<ProtectedRoutes />}>
               <Route
@@ -30,9 +33,10 @@ function App() {
                 path="/ScheduleNewAppointment"
                 element={<ScheduleNewAppointment />}
               />
+              <Route path="/EditAppointment" element={<EditAppointment />} />
             </Route>
 
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/404Page" />} />
           </Routes>
         </main>
       </Router>

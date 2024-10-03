@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
-import Typography from '@mui/material/Typography';
 import { GoBackIcon, ScheduleIcon } from '../icons';
 import ButtonWithIcon from '../components/ButtonWithIcon';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
-import { createAppoitmentSchema } from '../schemas';
-import { utilsData } from '../utils/utilsData';
+import { editAppointmentSchema } from '../schemas';
 import CustomInput from '../components/CustomInput';
 import dayjs from 'dayjs';
+import { DemoItem, DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DemoItem, DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { TimePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { utilsData } from '../utils/utilsData';
 import SnackbarComponent from '../components/SnackbarComponent';
 import useLocalStorage from '../CustomHooks';
 
-function ScheduleNewAppointment() {
-  dayjs.extend(customParseFormat);
-  const { apiURL, apiAppointments } = utilsData;
+function EditAppointment() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { getItem } = useLocalStorage();
+  const appointmentId = location.state.id;
+
   const token = getItem('fetchedToken');
-  const user = getItem('userId');
+  const userId = getItem('userId');
+  const { apiURL, apiAppointments } = utilsData;
 
   const [submittingForm, setSubmittingForm] = useState(false);
   const [customSnackbarStatus, setCustomSnackbarStatus] = useState({
@@ -33,65 +36,72 @@ function ScheduleNewAppointment() {
 
   useEffect(() => {}, [customSnackbarStatus]);
 
-  const appointmentCreator = async ({
+  const appointmentEditor = async ({
     title,
     date,
     startTime,
     endTime,
     description
   }) => {
+    setSubmittingForm(true);
+    setCustomSnackbarStatus({ isOpen: true, snackbarCaption: 'Editing ...' });
     startTime = `${date} ${startTime} GMT`;
     endTime = `${date} ${endTime} GMT`;
 
     try {
-      setSubmittingForm(true);
-      const response = await fetch(`${apiURL}${apiAppointments}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': token
-        },
-        body: JSON.stringify({
-          title,
-          user: user,
-          startTime,
-          endTime,
-          description,
-          createdBy: user
-        })
-      });
+      const response = await fetch(
+        `${apiURL}${apiAppointments}/${appointmentId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': token
+          },
+          body: JSON.stringify({
+            title,
+            user: userId,
+            startTime,
+            endTime,
+            description,
+            createdBy: userId
+          })
+        }
+      );
 
       if (response.status === 404) {
-        console.log('response status: ', response.status);
         setSubmittingForm(false);
         setCustomSnackbarStatus({
           isOpen: true,
           snackbarCaption: 'Error creating Appointment, please try again.',
           duration: 3000
         });
-        throw new Error(`Error creating appointment: ${response.error}`);
+        throw new Error(`Error editing appointment: ${response.error}`);
       }
-
       setCustomSnackbarStatus({
         isOpen: true,
         snackbarCaption: 'Appointment Created.',
         duration: 1500
       });
       setSubmittingForm(false);
+      pageRedirecter();
       return;
     } catch (error) {
       console.error('An error occurred:', error);
     }
   };
 
+  const pageRedirecter = () => {
+    navigate({
+      pathname: '/CurrentSchedule'
+    });
+  };
   const getCurrentTime = () => dayjs().format('YYYY-MM-DDTHH:mm');
 
   const initialFormStatus = {
-    title: 'Enter your title',
-    date: dayjs(getCurrentTime()),
-    startTime: dayjs(getCurrentTime()),
-    endTime: dayjs(getCurrentTime()),
-    description: 'This is a dev test'
+    title: location.state.title,
+    startTime: location.state.startTime,
+    endTime: location.state.endTime,
+    description: location.state.description
   };
 
   return (
@@ -99,21 +109,18 @@ function ScheduleNewAppointment() {
       <NavBar />
       <div className="container mx-auto">
         <div className="flex flex-col justify-center items-center mt-8 mx-auto lg:mt-20 lg:w-6/12">
-          <Typography variant="h6">
-            Please select from the below options:
-          </Typography>
+          <Typography variant="h6">Please edit yor appointment:</Typography>
 
           <SnackbarComponent
             isOpen={customSnackbarStatus.isOpen}
             snackbarCaption={customSnackbarStatus.snackbarCaption}
             duration={customSnackbarStatus.duration}
           />
-
           <Formik
             initialValues={initialFormStatus}
-            validationSchema={createAppoitmentSchema}
+            validationSchema={editAppointmentSchema}
             onSubmit={function (values, actions) {
-              appointmentCreator(values);
+              appointmentEditor(values);
               actions.resetForm();
             }}
           >
@@ -152,7 +159,6 @@ function ScheduleNewAppointment() {
                               'HH:mm:ss'
                             );
                           }}
-                          defaultValue={props.startTime}
                           disabled={isSubmitting}
                         />
                       </DemoItem>
@@ -229,21 +235,24 @@ function ScheduleNewAppointment() {
                   <ButtonWithIcon
                     linkType={true}
                     linkRoute={'../CurrentSchedule'}
-                    linkClassName="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
+                    linkClassName={
+                      'custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4'
+                    }
                     IconComp={<GoBackIcon />}
                     btnCaption={'Go Back'}
                     disabled={isSubmitting}
                   />
 
-                  <ButtonWithIcon
-                    btnClassName={
-                      'custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4'
-                    }
-                    disabled={isSubmitting}
-                    IconComp={<ScheduleIcon />}
-                    btnCaption="Submit"
+                  <button
                     type="submit"
-                  />
+                    className="custom-btn-styles items-center justify-center w-5/12 mx-auto mt-4"
+                    disabled={isSubmitting}
+                  >
+                    <ButtonWithIcon
+                      IconComp={<ScheduleIcon />}
+                      btnCaption="Submit"
+                    />
+                  </button>
                 </div>
               </Form>
             )}
@@ -254,4 +263,4 @@ function ScheduleNewAppointment() {
   );
 }
 
-export default ScheduleNewAppointment;
+export default EditAppointment;

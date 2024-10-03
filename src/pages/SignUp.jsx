@@ -1,164 +1,194 @@
-// import React, { useState } from 'react';
-
-// export default function SignUp() {
-//   return (
-//     <div className="w-3/5 mt-32 flex justify-center items-center flex-col mx-auto">
-//       <h1 className="text-5xl text-sky-700 font-bold">Welcome to Dentora</h1>
-//       <h3 className="text-2xl mt-6">Please register a new user</h3>
-
-//     </div>
-//   );
-// }
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { RegisterIcon, HomeIcon, ContinueIcon } from '../icons';
+import React from 'react';
+import { RegisterIcon, HomeIcon, UserDeniedIcon, WelcomeIcon } from '../icons';
 import { utilsData } from '../utils/utilsData';
+import { Form, Formik } from 'formik';
+import { signupSchema } from '../schemas';
+import ButtonWithIcon from '../components/ButtonWithIcon';
+import { CustomBtnInnerContent } from '../components/CustomBtns';
+import { useNavigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
+import CustomInput from '../components/CustomInput';
+import { useFormStatusController } from '../helpers';
 
 export default function SignUp() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [singupStatus, setSignupStatus] = useState('initialStatus');
-  const [userMessage, setUserMessage] = useState('');
+  const navigate = useNavigate();
+  const { apiURL, apiSignUpRoute } = utilsData;
+  const {
+    fetchingStatus,
+    submittingForm,
+    loadingStatus,
+    failedStatus,
+    successStatus
+  } = useFormStatusController();
 
-  async function createUser(email, password) {
+  const createUser = async ({ firstName, lastName, email, password }) => {
     try {
-      setSignupStatus('processingStatus');
-      const response = await fetch(
-        utilsData.apiURL + utilsData.apiSignUpRoute,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password
-          })
-        }
-      );
+      loadingStatus();
+      const response = await fetch(`${apiURL}${apiSignUpRoute}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password
+        })
+      });
 
       if (response.status === 400) {
-        setSignupStatus('failedStatus');
-        setUserMessage('existingEmail');
-        statusReset();
-      } else {
-        const json = await response.json();
-        window.localStorage.setItem('token', json.token);
-        setSignupStatus('successStatus');
-        setUserMessage('success');
+        failedStatus();
+        throw new Error('Bad Request, please try again later');
       }
-    } catch (error) {
-      console.log('An error occurred:', error);
-    }
-  }
 
-  function statusReset() {
-    setTimeout(() => {
-      setSignupStatus('initialStatus');
-    }, 1500);
-  }
+      successStatus();
+      const json = await response.json();
+      if (json.user) {
+        localStorage.setItem('userId', json.user._id);
+        localStorage.setItem('userName', json.user.firstName);
+      }
+      if (json.token) {
+        localStorage.setItem('fetchedToken', json.token);
+      }
+      navigate({
+        pathname: '/CurrentSchedule'
+      });
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  };
+
+  const initialFormStatus = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  };
 
   return (
-    <div className="w-3/5 mt-32 flex justify-center items-center flex-col mx-auto">
-      <h1 className="text-5xl text-sky-700 font-bold">Welcome to Dentora</h1>
-      <h3 className="text-2xl mt-6">Please register a new user</h3>
+    <div className="w-11/12 md:w-8/12 mt-10 md:mt-32 flex justify-center items-center flex-col mx-auto">
+      <h1 className=" text-4xl md:text-5xl text-sky-700 font-bold">
+        Welcome to Dentora
+      </h1>
+      <h3 className="text-lg md:text-2xl mt-6 ">Please register a new user</h3>
 
-      <form action="handleSubmit" className="flex flex-col mt-6 w-4/6 mx-auto">
-        <label className="flex gap-4 text-base justify-between mt-2 h-10 items-center">
-          Email:
-          <input
-            type="text"
-            placeholder="youremail@email.com"
-            className="w-3/6 pl-2 border-2  border-sky-600 rounded-lg py-1"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
+      <Formik
+        initialValues={initialFormStatus}
+        validationSchema={signupSchema}
+        onSubmit={function (values, actions) {
+          createUser(values);
+          actions.resetForm();
+        }}
+      >
+        {(props, isSubmitting = submittingForm) => (
+          <Form className="flex flex-col w-10/12 gap-4 mt-6 md:mt-8 lg:w-8/12">
+            <CustomInput
+              id="firstName"
+              name="firstName"
+              label="Enter your first name."
+              type="firstName"
+              onChange={props.handleChange}
+              onBlur={props.handleBlur}
+              value={props.values.firstName}
+              disabled={isSubmitting}
+            />
+            <CustomInput
+              id="lastName"
+              name="lastName"
+              label="Enter your last name."
+              type="lastName"
+              onChange={props.handleChange}
+              onBlur={props.handleBlur}
+              value={props.values.lastName}
+              disabled={isSubmitting}
+            />
+            <CustomInput
+              id="email"
+              name="email"
+              label="Enter your email."
+              type="email"
+              onChange={props.handleChange}
+              onBlur={props.handleBlur}
+              value={props.values.email}
+              disabled={isSubmitting}
+            />
+            <CustomInput
+              id="password"
+              name="password"
+              label="Enter your password."
+              type="password"
+              onChange={props.handleChange}
+              onBlur={props.handleBlur}
+              value={props.values.password}
+              disabled={isSubmitting}
+            />
+            <CustomInput
+              id="confirmPassword"
+              name="confirmPassword"
+              label="Please confirm your password."
+              type="password"
+              onChange={props.handleChange}
+              onBlur={props.handleBlur}
+              value={props.values.confirmPassword}
+              disabled={isSubmitting}
+            />
 
-        <label className="flex gap-4 text-base justify-between mt-2 h-10 items-center ">
-          Password:
-          <input
-            type="password"
-            placeholder="****"
-            className="w-3/6 pl-2 border-2  border-sky-600 rounded-lg py-1"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
+            <div className="flex justify-between mt-6">
+              <ButtonWithIcon
+                linkType={true}
+                linkRoute={'/'}
+                linkClassName={
+                  'custom-btn-styles w-5/12 md:w-auto lg:w-5/12 lg:py-4'
+                }
+                IconComp={<HomeIcon />}
+                btnCaption="Go-Back"
+              />
 
-        <div className="flex justify-evenly mt-6 py-5 gap-10">
-          <Link to="../">
-            <button
-              className="flex justify-center items-center gap-2 rounded-lg bg-gradient-to-tr w-42 from-sky-600 to-sky-900 py-2 px-10 align-middle text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-              type="button"
-              data-ripple-light="true"
-            >
-              <HomeIcon /> <span>Home</span>
-            </button>
-          </Link>
+              <button
+                type="submit"
+                className="custom-btn-styles w-5/12 md:w-auto lg:w-6/12 lg:py-4"
+              >
+                {fetchingStatus === 'initialStatus' ? (
+                  <CustomBtnInnerContent
+                    text="Sign-Up"
+                    icon={<RegisterIcon />}
+                  />
+                ) : null}
 
-          <div className={singupStatus === 'initialStatus' ? 'flex' : 'hidden'}>
-            <button
-              className="custom-btn-styles"
-              type="button"
-              data-ripple-light="true"
-              onSubmit={() => {
-                createUser(email, password);
-              }}
-            >
-              <RegisterIcon /> <span>Register</span>
-            </button>
-          </div>
+                {fetchingStatus === 'loadingStatus' ? (
+                  <CustomBtnInnerContent
+                    text="Loading"
+                    icon={
+                      <CircularProgress
+                        size={20}
+                        sx={{
+                          color: 'white'
+                        }}
+                      />
+                    }
+                  />
+                ) : null}
 
-          <div
-            className={singupStatus === 'processingStatus' ? 'flex' : 'hidden'}
-          >
-            <div
-              className="custom-btn-styles"
-              type="button"
-              data-ripple-light="true"
-            >
-              <ContinueIcon />
-              <span>Loading</span>
+                {fetchingStatus === 'successStatus' ? (
+                  <CustomBtnInnerContent
+                    text="Welcome"
+                    icon={<WelcomeIcon />}
+                  />
+                ) : null}
+
+                {fetchingStatus === 'failedStatus' ? (
+                  <CustomBtnInnerContent
+                    text="Failed"
+                    icon={<UserDeniedIcon />}
+                  />
+                ) : null}
+              </button>
             </div>
-          </div>
-
-          <div
-            to="/CurrentSchedule"
-            className={singupStatus === 'failedStatus' ? 'flex' : 'hidden'}
-          >
-            <div className="custom-btn-styles">
-              <ContinueIcon />
-              <span>Failed</span>
-            </div>
-          </div>
-
-          <Link
-            to="/CurrentSchedule"
-            className={singupStatus === 'successStatus' ? 'flex' : 'hidden'}
-          >
-            <button
-              className="custom-btn-styles"
-              type="button"
-              data-ripple-light="true"
-            >
-              <ContinueIcon />
-              <span>Continue</span>
-            </button>
-          </Link>
-        </div>
-      </form>
-      <div className={userMessage === 'error' ? 'flex' : 'hidden'}>
-        <p className="mt-4">Hubo un problema, intente mas tarde.</p>
-      </div>
-      <div className={userMessage === 'existingEmail' ? 'flex' : 'hidden'}>
-        <p className="mt-4">Email already in file, please go back to login</p>
-      </div>
-      <div className={userMessage === 'success' ? 'flex' : 'hidden'}>
-        <p className="mt-4">User has been register, you can Continue</p>
-      </div>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 }

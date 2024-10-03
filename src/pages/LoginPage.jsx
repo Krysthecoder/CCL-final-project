@@ -1,293 +1,170 @@
-import React from 'react';
+import React, { useState } from 'react';
 import img from '../assets/login-doctor-image.jpg';
-import { useFormik } from 'formik';
-// import { utilsData } from '../utils/utilsData';
-import { Link, useNavigate } from 'react-router-dom';
-import { CircledRightArrow, LoginIcon, UserDeniedIcon } from '../icons';
-import { basicSchema } from '../schemas';
-
-const onSubmit = (values, actions) => {
-  console.log(values);
-  actions.resetForm();
-};
+import { Form, Formik } from 'formik';
+import { utilsData } from '../utils/utilsData';
+import { useNavigate } from 'react-router-dom';
+import { CircledUptArrow, LoginIcon } from '../icons';
+import { loginSchema } from '../schemas';
+import ButtonWithIcon from '../components/ButtonWithIcon';
+import { CustomBtnInnerContent } from '../components/CustomBtns';
+import CustomInput from '../components/CustomInput';
+import SnackbarComponent from '../components/SnackbarComponent';
+import useLocalStorage from '../CustomHooks';
 
 function LoginPage() {
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
-    useFormik({
-      initialValues: {
-        email: '',
-        password: ''
-      },
-      validationSchema: basicSchema,
-      onSubmit
-    });
+  const { apiURL, apiSignInRoute } = utilsData;
+  const [isLoggedIn, setIsLoggedIn] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [submittingForm, setSubmittingForm] = useState(false);
+  const { setItem } = useLocalStorage();
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  const loginMethod = async ({ email, password }) => {
+    try {
+      setSubmittingForm(true);
+
+      setSnackbarOpen(true);
+      const response = await fetch(`${apiURL}${apiSignInRoute}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email,
+          password
+        })
+      });
+
+      if (response.status === 400) {
+        setErrorMsg(`Error: Bad Request, ${response.status.errorMsg}`);
+        setIsLoggedIn('unauthorized');
+        setSubmittingForm(false);
+        throw new Error(`Error loging into account: ${response.error}`);
+      } else if (response.status === 401) {
+        console.log(response.status);
+        setErrorMsg(`Error: Bad Credentials`);
+        setIsLoggedIn('unauthorized');
+        setSubmittingForm(false);
+        console.error(errorMsg);
+      } else if (response.status === 404) {
+        setErrorMsg(`Error: Bad Credentials, ${response.status.errorMsg}`);
+        setIsLoggedIn('unauthorized');
+        setSubmittingForm(false);
+        throw new Error(`Error loging into account: ${response.error}`);
+      } else {
+        const json = await response.json();
+        if (json.user) {
+          setItem('userName', json.user.firstName);
+        }
+        if (json.token.length > 0) {
+          setItem('fetchedToken', json.token);
+          setIsLoggedIn('authorized');
+          navigate({
+            pathname: '/CurrentSchedule'
+          });
+        }
+        if (json.user._id.length > 0) {
+          setItem('userId', json.user._id);
+        }
+      }
+    } catch (error) {
+      setErrorMsg('An error occurred:', error);
+    }
+  };
+
+  const initialFormStatus = {
+    email: 'krysthopher5@gmail.com',
+    password: 'Password2341@'
+  };
 
   return (
-    <div className="flex w-5/6 items-center justify-center mt-16 gap-8 mx-auto">
-      <img src={img} alt="login-doctor-image?" className="w-1/3 rounded-xl" />
-
+    <div
+      className="
+    flex flex-col w-11/12
+    xl:w-5/6 xl:flex-row
+    items-center justify-center mt-16 gap-14 mx-auto"
+    >
+      <img
+        src={img}
+        alt="login-doctor-image"
+        className="
+          w-5/12 rounded-2xl
+          md:w-4/12
+          xl:w-1/3 xl:rounded-xl"
+      />
       <div>
-        <h1 className="text-5xl text-center">Welcome to Dentora!</h1>
+        <SnackbarComponent isOpen={snackbarOpen} snackbarCaption={'Loading!'} />
 
+        <h1 className="text-3xl md:text-5xl text-center">Welcome to Dentora</h1>
         <h3 className="text-lg text-center mt-6">
-          Please enter your credentials!
+          Please enter your credentials
         </h3>
 
-        <form
-          onSubmit={handleSubmit}
-          autoComplete="off"
-          className="flex flex-col w-4/5 mx-auto gap-4 mt-6"
+        <Formik
+          initialValues={initialFormStatus}
+          validationSchema={loginSchema}
+          onSubmit={function (values, actions) {
+            loginMethod(values);
+            actions.resetForm();
+          }}
         >
-          <div className="flex justify-between ">
-            <label>Email</label>
-            <input
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              type="email"
-              id="email"
-              placeholder="email@email.com"
-              className={
-                errors.email && touched.email
-                  ? 'text-sm  pl-2 border-2 w-4/6 border-red-600 rounded-lg py-1'
-                  : 'text-sm  pl-2 border-2 w-4/6 border-sky-600 rounded-lg py-1'
-              }
-            />
-          </div>
-          {errors.email && touched.email && <p>{errors.email}</p>}
+          {(props, isSubmitting = submittingForm) => (
+            <Form
+              className="flex flex-col mx-auto gap-4 mt-6"
+              onSubmit={props.handleSubmit}
+            >
+              <CustomInput
+                id="email"
+                name="email"
+                label="Enter your email"
+                type="textemail"
+                onChange={props.handleChange}
+                onBlur={props.handleBlur}
+                value={props.values.email}
+                disabled={isSubmitting}
+              />
+              <CustomInput
+                id="password"
+                name="password"
+                label="Enter your password"
+                type="password"
+                onChange={props.handleChange}
+                onBlur={props.handleBlur}
+                value={props.values.password}
+                disabled={isSubmitting}
+              />
+              {isLoggedIn === 'unauthorized' && (
+                <p className="flex justify-center text-sm mt-3 text-red-700">
+                  {errorMsg}
+                </p>
+              )}
 
-          <div className="flex justify-between">
-            <label>Password</label>
-            <input
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              type="password"
-              id="password"
-              className={
-                errors.password && touched.password
-                  ? 'text-sm  pl-2 border-2 w-4/6 border-red-600 rounded-lg py-1'
-                  : 'text-sm  pl-2 border-2 w-4/6 border-sky-600 rounded-lg py-1'
-              }
-            />
-          </div>
-          {errors.password && touched.password && <p>{errors.password}</p>}
+              <div className="flex justify-between mt-6">
+                <ButtonWithIcon
+                  linkType={true}
+                  linkRoute={'/SignUp'}
+                  linkClassName={'custom-btn-styles'}
+                  IconComp={<CircledUptArrow />}
+                  btnCaption="Sign-up"
+                />
 
-          <div className="flex justify-between mt-6">
-            <Link to={'/SignUp'} className="custom-btn-styles">
-              <span>Sign-up</span>
-              <CircledRightArrow />
-            </Link>
-
-            <button type="submit" className="custom-btn-styles">
-              <span>Log in</span>
-              <LoginIcon />
-            </button>
-          </div>
-        </form>
+                <button
+                  type="submit"
+                  className="custom-btn-styles"
+                  disabled={isSubmitting}
+                >
+                  <CustomBtnInnerContent text="Submit" icon={<LoginIcon />} />
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   );
 }
 
 export default LoginPage;
-
-// import React, { useState } from 'react';
-// import img from '../assets/login-doctor-image.jpg';
-// import { utilsData } from '../utils/utilsData';
-// import { Link, useNavigate } from 'react-router-dom';
-// import { CircledRightArrow, LoginIcon, UserDeniedIcon } from '../icons';
-// import { CircularProgress } from '@mui/material';
-
-// function LoginPage() {
-//   const navigate = useNavigate();
-
-//   const [userEmail, setUserEmail] = useState('');
-//   const [userPassword, setUserPassword] = useState('');
-//   const [errorHidden, setErrorHidden] = useState(true);
-//   const [signinStatus, setSigningStatus] = useState('initialStatus');
-
-//   async function loginMethod(email, password) {
-//     try {
-//       setSigningStatus('gettingStatus');
-//       const response = await fetch(
-//         utilsData.apiURL + utilsData.apiSignInRoute,
-//         {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json'
-//           },
-//           body: JSON.stringify({
-//             email: email,
-//             password: password
-//           })
-//         }
-//       );
-
-//       if (response.status === 400) {
-//         console.log('please check your credentials');
-//         setErrorHidden(false);
-//         setSigningStatus('failedStatus');
-//         btnResetter();
-//       } else {
-//         const json = await response.json();
-//         if (json.token.length > 0) {
-//           window.localStorage.setItem('fetchedToken', json.token); /// TODO: corregir nombre
-//         }
-//         setErrorHidden(true);
-//         setSigningStatus('succesStatus');
-//         pageRedirecter();
-//         console.log('success');
-//       }
-//     } catch (error) {
-//       console.log('An error occurred:', error);
-//     }
-//   }
-
-//   function pageRedirecter() {
-//     setTimeout(() => {
-//       navigate({
-//         pathname: '/CurrentSchedule'
-//       });
-//     }, 1500);
-//   }
-
-//   function btnResetter() {
-//     setTimeout(() => {
-//       setSigningStatus('initialStatus');
-//     }, 1500);
-//   }
-
-//   return (
-//     <div className="flex w-5/6 items-center justify-center mt-16 gap-8 mx-auto">
-//       <img src={img} alt="login-doctor-image?" className="w-1/3 rounded-xl" />
-
-//       <div className="">
-//         <h1 className="text-5xl text-center">Welcome to Dentora!</h1>
-
-//         <h3 className="text-lg text-center mt-6">
-//           Please enter your credentials!
-//         </h3>
-
-//         <form action="" className="flex flex-col mt-6 w-5/6 mx-auto">
-//           <label
-//             htmlFor=""
-//             className="flex gap-4 text-base justify-between mt-2 h-10 items-center"
-//           >
-//             Email:
-//             <input
-//               type="email"
-//               placeholder="juanitopancracio@gmail.com"
-//               className="text-sm w-4/6 pl-2 border-2  border-sky-600 rounded-lg py-1"
-//               value={userEmail}
-//               onChange={(e) => setUserEmail(e.target.value)}
-//             />
-//           </label>
-//           <label
-//             htmlFor=""
-//             className="flex gap-4 text-base justify-between mt-2 h-10 items-center "
-//           >
-//             Password:
-//             <input
-//               type="password"
-//               placeholder="********"
-//               className="text-sm w-4/6 pl-2 border-2  border-sky-600 rounded-lg py-1"
-//               value={userPassword}
-//               onChange={(e) => setUserPassword(e.target.value)}
-//             />
-//           </label>
-
-//           <div className="flex justify-evenly mt-6 py-5 gap-6">
-//             <Link
-//               to="./SignUp"
-//               className={
-//                 signinStatus === 'initialStatus'
-//                   ? 'flex'
-//                   : signinStatus === 'failedStatus'
-//                   ? 'flex'
-//                   : 'hidden'
-//               }
-//             >
-//               <button
-//                 className="custom-btn-styles"
-//                 type="button"
-//               >
-//                 <span>Sign-up</span>
-//                 <CircledRightArrow />
-//               </button>
-//             </Link>
-
-//             <button
-//               className={
-//                 signinStatus === 'initialStatus'
-//                   ? 'custom-btn-styles'
-//                   : 'hidden'
-//               }
-//               type="button"
-//               data-ripple-light="true"
-//               onClick={() => {
-//                 loginMethod(userEmail, userPassword);
-//               }}
-//             >
-//               <span>Log in</span>
-//               <LoginIcon />
-//             </button>
-
-//             <div
-//               className={
-//                 signinStatus === 'gettingStatus'
-//                   ? 'custom-btn-styles'
-//                   : 'hidden'
-//               }
-//             >
-//               <span>Loading</span>
-//               <CircularProgress
-//                 size={20}
-//                 sx={{
-//                   color: 'white'
-//                 }}
-//               />
-//             </div>
-
-//             <button
-//               className={
-//                 signinStatus === 'failedStatus'
-//                   ? 'custom-btn-styles'
-//                   : 'hidden'
-//               }
-//               type="button"
-//             >
-//               <span>Failed</span>
-//               <UserDeniedIcon />
-//             </button>
-
-//             <Link
-//               to={'./CurrentSchedule'}
-//               className={signinStatus === 'succesStatus' ? 'flex' : 'hidden'}
-//             >
-//               <div
-//                 className="justify-center items-center gap-2 rounded-lg w-96 bg-gradient-to-tr from-sky-600 to-sky-900 py-2 px-10 text-center text-xs font-bold uppercase text-white  transition-all shadow-lg shadow-pink-500/40 "
-//                 type="button"
-//               >
-//                 <span>Welcome!</span>
-//               </div>
-//             </Link>
-//           </div>
-//           <div className="mt-4 h-6">
-//             <p
-//               className={
-//                 errorHidden
-//                   ? 'hidden'
-//                   : 'flex text-xs text-red-700 justify-center'
-//               }
-//             >
-//               There is something wrong with your credentials, try again.
-//             </p>
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default LoginPage;
